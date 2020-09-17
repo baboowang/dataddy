@@ -1,0 +1,37 @@
+{
+  "name": "corveda/php-sandbox",
+  "description": "A PHP library that can be used to run PHP code in a sandboxed environment",
+  "keywords": ["php", "sandbox", "parser", "whitelist", "blacklist"],
+  "type": "library",
+  "homepage": "https://phpsandbox.org/",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Elijah Horton",
+      "email": "elijah@corveda.com"
+    },
+    {
+      "name": "Corveda, LLC."
+    }
+  ],
+  "require": {
+    "php": ">=5.4",
+    "nikic/php-parser": "2.*",
+    "jeremeamia/FunctionParser": "*"
+  },
+  "require-dev": {
+    "symfony/yaml": "~2.1",
+    "phpunit/phpunit": "4.8.*"
+  },
+  "replace": {
+    "fieryprophet/php-sandbox": "*"
+  },
+  "autoload": {
+    "files": [
+      "src/functions.php"
+    ],
+    "psr-4": {
+      "PHPSandbox\\": "src/"
+    }
+  }
+}

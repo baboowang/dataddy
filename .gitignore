@@ -5,4 +5,3 @@ install/doc/install.application.ini
 install/step.txt
 install/logs/*
 cache/
-vendor
