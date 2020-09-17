@@ -1,0 +1,250 @@
+<?php ddy_view_filter(); ?>
+
+<?=$error?>
+
+<?=@$options['prepend_content']?>
+<?php if (!empty($options['remark'])) :?>
+<div class="alert alert-success">
+<?=$options['remark']?>
+</div>
+<?php endif; ?>
+<?php foreach ($result['data'] as $report_id => $rdata) : ?>
+<?php if (isset($rdata['msg'])) :?>
+<?php foreach ($rdata['msg'] as $type => $content) :?>
+<?php if ($type == 'error') $type = 'danger'; ?>
+<div class="alert alert-<?=$type?> alert-dismissable">
+<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+<?=implode("<br/>", $content)?>
+</div>
+<?php endforeach;?>
+<?php endif;?>
+
+<?php if (@$rdata['chart_options'] && $rdata['rows'] && count($rdata['rows']) > 1) :?>
+<style type="text/css">
+    #report-cnt div.chart{height:400px}
+</style>
+<div id="rchart-<?=$report_id?>"></div>
+<script>
+$(function(){
+    var _report_id = '<?=$report_id?>';
+        _chart_options = <?=json_encode($rdata['chart_options'])?>;
+    if (typeof _chart_options != 'string' && typeof _chart_options[_report_id] != 'undefined') {
+        _chart_options = _chart_options[_report_id];
+    }
+    render_chart('<?=$report_id?>', _chart_options);
+});
+</script>
+<?php endif;?>
+
+<div class="portlet light bg-inverse<?=@$rdata['options']['invisible'] ? ' hide' : ''?>">
+    <div class="portlet-title">
+        <div class="caption font-green-haze">
+            <i class="icon-paper-plane font-green-haze"></i>
+            <span class="caption-subject bold uppercase"> <?=h(@$rdata['options']['title'])?> #<?=$report_id?></span>
+            <span class="caption-helper"><?=h(@$rdata['options']['subtitle'])?>
+                <small>
+                    [PAR]:<?=$result['parse_time']?>ms
+                    <?php if (isset($rdata['sql_use_time'])) :?>
+                    [SQL]:<?=$rdata['sql_use_time']?>ms
+                    <?php endif;?>
+                    <?php if (isset($rdata['process_use_time'])) :?>
+                    [DAT]:<?=$rdata['process_use_time']?>ms
+                    <?php endif;?>
+                </small>
+            </span>
+        </div>
+        <div class="actions">
+            <a href="javascript:;" class="btn btn-circle red-sunglo btn-sm add-to-dashboard" title="添加到Dashboard"><i class="fa fa-plus"></i></a>
+            <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;" data-original-title="" title="全屏"></a>
+        </div>
+    </div>
+    <div class="portlet-body" style="height: auto;">
+
+<?php if (empty($rdata['rows'])) :?>
+<p>没有数据</p>
+<?php else :?>
+<?php
+    $dt_table = TRUE;
+
+    if (count($rdata['rows']) <= 1 ||
+        (isset($rdata['options']['dt']) && $rdata['options']['dt'] === FALSE) ||
+        isset($rdata['options']['merge_cell']) ||
+        @$rdata['options']['invisible']
+    ) {
+        $dt_table = FALSE;
+    }
+
+    $first_row_key = isset($rdata['rows'][0]) ? 0 : array_shift(array_keys($rdata['rows']));
+    $colnames = array_keys($rdata['rows'][$first_row_key]);
+?>
+<table class="table table-striped table-hover" id="rtable-<?=$report_id?>" <?php if ($dt_table) :?>datatable="" dt-options="dtOptions('<?=$report_id?>')"<?php endif;?>>
+<thead>
+<tr>
+<?php foreach ($colnames as $colname) :?>
+<?php
+    $tooltip = $rdata['options']['fields'][$colname]['tooltip'] ?? '';
+    if (isset($rdata['options']['fields'][$colname]['header'])) {
+        $colname = $rdata['options']['fields'][$colname]['header'];
+    }
+?>
+    <th <?=$tooltip ? "title='$tooltip' class='tooltips'" : ""?>>
+    <?=$colname?>
+    <?php if ($tooltip) :?>
+    <i class="fa fa-question-circle"></i>
+    <?php endif; ?>
+</th>
+<?php endforeach;?>
+</tr>
+</thead>
+
+<?php
+    $need_close_tbody = FALSE;
+    $merge_cell = !!@$rdata['options']['merge_cell'];
+
+    $rows = $rdata['rows'];
+
+    if ($merge_cell) {
+        $merge_fields = preg_split('@\s*,\s*@u', $rdata['options']['merge_cell']);
+        $merge_status = [];
+    }
+?>
+
+<?php
+    $keys = array_keys($rows);
+    foreach ($keys as $i => $key) :
+        $row = $rows[$key];
+        $tr_attrs = d(@$rdata['attrs'][$i]['_'], []);
+        $is_summary = in_array("$key", ['sum', 'avg']);
+
+        if (!is_numeric($key)) {
+            $class = explode('.', $key)[0] . ' summary';
+            if (isset($tr_attrs['class'])) {
+                $class .= ' ' . $tr_attrs['class'];
+            }
+            $tr_attrs['class'] = $class;
+        }
+
+        $tr_attr_list = [];
+        foreach ($tr_attrs as $attr_name => $attr_value) {
+            $tr_attr_list[] = " {$attr_name}=\"{$attr_value}\"";
+        }
+        $tr_attr = implode('', $tr_attr_list);
+?>
+
+<?php if ($is_summary) :?>
+<?=$need_close_tbody ? '</tbody>' : ''?>
+<tbody class="summary <?=$key?>">
+<?php elseif (!$need_close_tbody) :?>
+<tbody class="items">
+<?php $need_close_tbody = TRUE; ?>
+<?php endif;?>
+
+<tr<?=$tr_attr?>>
+<?php foreach ($colnames as $col_index => $name) :?>
+<?php
+    $val = @$row[$name];
+    $attrs = d(@$rdata['attrs'][$i][$name], []);
+    $link = '';
+    $attr_list = [];
+
+    if (isset($attrs['nan'])) {
+        unset($attrs['nan']);
+    } else {
+        $val = n($val, $name, $options);
+    }
+
+    foreach ($attrs as $attr_name => $attr_value) {
+        if ($attr_name == 'href') {
+            $link = $attr_value;
+        } else {
+            $attr_list[] = "{$attr_name}=\"{$attr_value}\"";
+        }
+    }
+
+    if ($merge_cell && in_array($name, $merge_fields)) {
+
+        $merge_index = array_search($name, $merge_fields);
+
+        if (isset($merge_status[$name])) {
+            $merge_status[$name]--;
+            if ($merge_status[$name] == 0) {
+                unset($merge_status[$name]);
+            }
+            continue;
+        }
+
+        $rowspan = 1;
+
+        while(isset($keys[$i + $rowspan])) {
+            if ($rows[$keys[$i + $rowspan]][$name] != $val) {
+                break;
+            }
+
+            $rowspan++;
+        }
+        if ($merge_index > 0) {
+            $last_merge_field = $merge_fields[$merge_index - 1];
+            $last_status = isset($merge_status[$last_merge_field]) ? $merge_status[$last_merge_field] : 0;
+            $max_rowspan = $last_status + 1;
+            if ($rowspan > $max_rowspan) {
+                $rowspan = $max_rowspan;
+            }
+        }
+
+        if ($rowspan > 1) {
+            $merge_status[$name] = $rowspan - 1;
+            $attr_list[] = "rowspan=\"$rowspan\"";
+        }
+    }
+
+    $tooltip = '';
+    if ($col_index === 0 && $rdata['fliped']) {
+        $tooltip = $rdata['options']['fields'][$val]['tooltip'] ?? '';
+        $attr_list[] = "title='$tooltip'";
+        $attr_list[] = "class='tooltips'";
+    }
+
+    $attrs = implode(' ', $attr_list);
+    if ($attrs) {
+        $attrs = " $attrs";
+    }
+?>
+
+<?php if ($link) :?>
+<td>
+    <a href="<?=$link?>"<?=$attrs?>><?=$val?></a>
+    <?php if ($tooltip) :?>
+    <i class="fa fa-question-circle"></i>
+    <?php endif; ?>
+</td>
+<?php else:?>
+<td<?=$attrs?>>
+    <?=$val?>
+    <?php if ($tooltip) :?>
+    <i class="fa fa-question-circle"></i>
+    <?php endif; ?>
+</td>
+<?php endif;?>
+
+<?php endforeach;?>
+</tr>
+<?php
+    if ($is_summary) {
+        echo '</tbody>';
+        $need_close_tbody = FALSE;
+    }
+?>
+<?php endforeach;?>
+<?=$need_close_tbody ? '</tobdy>' : ''?>
+</table>
+<?php if ($rdata['options']) :?>
+<script>
+set_table_options('<?=$report_id?>', <?=json_encode($rdata['options'])?>);
+</script>
+<?php endif;?>
+<?php endif;?>
+    </div>
+</div>
+<?php endforeach; ?>
+<?=@$options['append_content']?>
+<?=$template_data?>

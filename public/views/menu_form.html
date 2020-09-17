@@ -1,0 +1,172 @@
+<div  data-ng-controller="MenuFormController">
+<style>
+#settings-input label,#content-input label{color:#888}
+.CodeMirror{border-bottom:1px solid #e5e5e5;height:auto}
+.error-circle{
+    background: #990000;
+    color: white;
+    font-weight: bold;
+}
+.code-error-widget{
+    background: #FF6666;
+    font-style:italic
+}
+</style>
+    <div class="version-list" data-ng-include="'/views/data_version.html'"></div>
+
+    <form role="form" id="menu-form" name="form" novalidate>
+    <div class="form-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group form-md-line-input">
+                    <input type="text" name="name" ng-model="menu.name" class="form-control" required/>
+                    <label>系统名称</label>
+                    <span class="help-block">
+                        系统层名称[/用户层名称]
+                    </span>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="form-group form-md-line-input">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="默认自动检测" name="dsn" ng-model="menu.dsn" />
+                        <label>DSN</label>
+                        <span class="input-group-addon">
+                        <i class="fa fa-key"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group form-md-line-input">
+                    <div class="md-checkbox-inline">
+                        <div class="md-checkbox">
+                            <input type="checkbox" id="checkbox33" class="md-check" ng-model="menu.visiable"/>
+                            <label for="checkbox33">
+                            <span></span>
+                            <span class="check"></span>
+                            <span class="box"></span>
+                            用户可见</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group form-md-line-input">
+                    <div class="md-checkbox-inline">
+                        <div class="md-checkbox">
+                            <input type="checkbox" id="checkbox34" class="md-check" ng-model="menu.release"/>
+                            <label for="checkbox34">
+                            <span></span>
+                            <span class="check"></span>
+                            <span class="box"></span>
+                            发布</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group form-md-line-input">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="uri" ng-model="menu.uri" />
+                        <label>URI</label>
+                        <span class="input-group-addon">
+                        <i class="fa fa-link"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group form-md-line-input">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="* * * * *" name="crontab" ng-model="menu.crontab" />
+                        <label>Crontab时间配置</label>
+                        <span class="input-group-addon">
+                        <i class="fa fa-bell-o"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group form-md-line-input" id="settings-input" style="margin-top:-40px">
+            <div class="input-icon">
+                <label>配置 <a href="javascript:;" ng-init="collapse_config_help=true" ng-click="collapse_config_help=!collapse_config_help"><i class="fa fa-question-circle"></i></a></label>
+                <div class="note note-success" collapse="collapse_config_help">
+                    <h4 class="block">配置说明</h4>
+                    <p>
+                        <pre>
+{
+    "table" : {  //默认表格配置
+        "avg" : true, //显示平均行，默认false
+        "sum" : true, //显示合计行，默认true
+        "limit" : 1000, //默认1000行
+        "datatable" : {  // datatable的自定义选项
+        }
+    },
+    "tables" : {  //页面有多个表格时，可以单独配置每个表格
+        "tableid" : {} //同table配置
+    },
+    "chart" : {  //默认图表配置
+        "line" : {  //line图配置
+        }
+    },
+    "mail" : {   //邮件发送报表设置
+		"receiver" : "wuxiaojing@shhuzhong.com,wujuetong@shhuzhong.com",   //可指定具体邮箱，也可使用系统的用户名
+		"subject" : "{name} - {date}", //邮件名称 {time}宏表示数据时间，{name}表示当前页面名称
+        "enable" : false  //是否开启，默认为true。
+	}
+    "charts" : {},  //同tables意义
+    "mail_title" : "{time} {name}", //报警邮件设置，邮件名称 {time}宏表示数据时间，{name}表示当前页面名称
+    "mail_receiver" : "somebody@example.com,username", //报警邮件设置，可指定具体邮箱，也可使用系统的用户名
+}
+                        </pre>
+                    </p>
+                </div>
+                <ui-codemirror ui-codemirror-opts="settingEditorOptions" ng-model="menu.settings" ui-refresh="refresh"></ui-codemirror>
+            </div>
+        </div>
+        <div class="form-group form-md-line-input" id="settings-input" style="margin-top:-40px">
+            <div class="input-icon">
+                <label>开发信息</label>
+                <div>
+                  <strong>{{menu.dev_user.nick}}</strong>
+                  最后修改于：{{menu.dev_version_time}}，
+                  发布版本时间：<span style="color:{{menu.release_version_time==menu.dev_version_time ? 'green' : 'red'}}">{{menu.release_version_time || 'null'}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group form-md-line-input"  id="content-input" style="margin-top:-40px">
+            <div class="input-icon">
+                <label>内容 <a href="javascript:;" ng-init="collapse_content_help=true" ng-click="collapse_content_help=!collapse_content_help"><i class="fa fa-question-circle"></i></a></label>
+                <div class="note note-success" collapse="collapse_content_help">
+                    <h4 class="block">语法说明</h4>
+                    <p>
+                        <label>筛选控件定义:</label><var>${name|label|default|type}</var>
+                        <strong>name:</strong> 控件名称，需要是字母，数字组成<br/>
+                        <strong>label:</strong> 控件的标签<br/>
+                        <strong>default:</strong> 默认值，常量或<a href="http://php.net/manual/zh/datetime.formats.relative.php" target="_blank">时间表达式</a>，例：<code>today,yesterday,first day of this month</code><br/>
+                        <strong>type:</strong><br/>
+                        <ul>
+                            <li> <var>date</var> : 日期，默认类型</li>
+                            <li> <var>string</var> : 字符串 </li>
+                            <li> <var>enum</var> : 枚举（下拉框）;格式 <code>enum[text1:val1,text2:val2,...] / enum[cb_func]</code>，其中<var>func</var>为预定的函数，返回<var>text:val</var>元素的数组</li>
+                        </ul>
+                    </p>
+                </div>
+                <ui-codemirror ui-codemirror-opts="contentEditorOptions" ui-codemirror="{ onLoad : codemirrorLoaded }" ng-model="menu.dev_content" ui-refresh="refresh"></ui-codemirror>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions noborder">
+        <button type="submit" class="btn blue" ng-disabled="form.$invalid">保 存</button>
+        <button type="button" class="btn default" ng-click="cancel()">取 消</button>
+    </div>
+</form>
+</div>

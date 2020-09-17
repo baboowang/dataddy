@@ -1,0 +1,71 @@
+<h1 style="font-size:28px;color:#666;margin:0 0 15px 0;font-weight:300"><?=$subject . '-' . date('Y-m-d')?></h1>
+<?=\MY\PluginManager::getInstance()->getResource()?>
+<?=@$error?>
+
+<?=@$options['prepend_content']?>
+
+<?php
+
+$style_border_color = "border-bottom:1px solid #ddd; padding:8px;text-align:left;";
+
+if ($result['type'] == 'html') {
+    echo $result['data'];
+    return;
+}
+
+foreach ($result['data'] as $report_id => $rdata) : ?>
+<div style="background:#f7f7f7;padding:12px 5px 15px 5px;margin-top:0px;margin-bottom:25px;">
+<h2 style="min-height:48px;border-bottom:1px solid #eee;margin:0;margin-bottom:10px;font-size:16px;font-weight:700;text-transform:uppercase !important;color:#44b6ae"><?=h(@$rdata['options']['title'])?> #<?=$report_id?></h2>
+<span class="caption-helper"><?=h(@$rdata['options']['subtitle'])?></span>
+<?php if (empty($rdata['rows'])) :?>
+<p>没有数据</p>
+<?php else :?>
+<table id="rtable-<?=$report_id?>" style="font-size:12px;border-collapse: collapse;width:100%;color:#333;border-color:grey">
+<thead>
+<tr>
+<?php foreach ($rdata['rows'][0] as $colname => $val) :?>
+<th style="<?=$style_border_color?> font-weight:bold"><?=$colname?></th>
+<?php endforeach;?>
+</tr>
+</thead>
+
+<?php $need_close_tbody = FALSE; ?>
+<tbody>
+<?php foreach ($rdata['rows'] as $i => $row) :?>
+<?php if (!is_numeric($i)) : $need_close_tbody = TRUE; ?></tbody><tbody><?php endif;?>
+<tr style="<?=$style_border_color?><?=$i%2 ? '' : ' background-color:#f9f9f9' ?>">
+<?php foreach ($row as $name => $val) :?>
+<?php
+    $attrs = d(@$rdata['attrs'][$i][$name], []);
+    $link = '';
+    $attr_list = [];
+    foreach ($attrs as $attr_name => $attr_value) {
+        if ($attr_name == 'href') {
+            $link = $attr_value;
+        } else {
+            $attr_list[] = "{$attr_name}=\"{$attr_value}\"";
+        }
+    }
+    $attrs = implode(' ', $attr_list);
+    if ($attrs) {
+        $attrs = " $attrs";
+    }
+?>
+
+<?php if ($link) :?>
+<td style="<?=$style_border_color?>"><a href="<?=$link?>"<?=$attrs?>><?=n($val, $name)?></a></td>
+<?php else:?>
+<td style="<?=$style_border_color?>" <?=$attrs?>><?=n($val, $name)?></td>
+<?php endif;?>
+
+<?php endforeach;?>
+</tr>
+<?php if (!is_numeric($i)) :?></tbody><?php endif;?>
+<?php endforeach;?>
+<?php if ($need_close_tbody) :?></tbody><?php endif;?>
+</table>
+
+<?php endif;?>
+</div>
+<?php endforeach; ?>
+<?=@$options['append_content']?>

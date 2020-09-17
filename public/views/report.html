@@ -1,0 +1,44 @@
+<h3 class="page-title">
+    {{$root.$state.current.data.pageTitle}}
+    <a class="btn btn-xs green" href="javascript:;" ng-click="edit()" ng-show="writeable"><i class="fa fa-edit"></i> 编辑</a>
+    <a class="btn btn-xs blue" href="javascript:;" ng-click="show_sql()" ng-show="writeable"><i class="fa fa-bug"></i> 查看SQL</a>
+    <a class="btn btn-xs blue" href="javascript:;" ng-click="send_mail()" ng-show="writeable"><i class="fa fa-envelope"></i> 发送邮件</a>
+    <a class="btn btn-xs blue" href="javascript:;" ng-click="refresh()"><i class="fa fa-refresh"></i> 刷新</a>
+    <a class="btn btn-xs yellow" href="javascript:;" ng-click="toggle_autorefresh()" ng-show="autorefresh"><i ng-class="{false:'fa fa-play', true:'fa fa-pause'}[stop_autorefresh]"></i>&nbsp;&nbsp;{{seconds}} 秒后刷新</a>
+    <span ng-show="dev_info.warning" style="color:red;font-size:11px">
+      注意：你当前访问的是未发布的报表，修改时间：{{dev_info.dev_version_time}}
+    </span>
+</h3>
+
+<style>
+.dataTables_wrapper .col-md-12 .btn-group{
+    float:right;
+        margin-right:100px;
+    margin-top:-65px;
+}
+</style>
+<div id="report-cnt" ng-show="!edit_mode"></div>
+
+<div class="portlet light bg-inverse" ng-show="edit_mode" id="report-form-cnt">
+    <div class="portlet-title">
+        <div class="caption font-green-sharp">
+            <i class="icon-settings font-green-sharp"></i>
+            <span class="caption-subject bold uppercase">编辑</span>
+        </div>
+        <div class="tools">
+            <a href="" class="fullscreen" data-original-title="" title="全屏">
+            </a>
+            <a href="" class="remove" data-original-title="" title="关闭">
+            </a>
+        </div>
+        <div class="actions">
+            <a href="javascript:;" class="btn btn-primary btn-sm" onclick="$(this).closest('.portlet').find('.portlet-body form').trigger('submit')">
+            <i class="fa fa-save"></i> 保存 </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div data-ng-include="'/views/menu_form.html?v=0428'"></div>
+    </div>
+</div>
+
+

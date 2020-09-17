@@ -1,0 +1,199 @@
+<style>
+.portlet .tools a.text-btn{
+    font-size:10px;
+    color:#999;
+}
+.portlet { margin-bottom:0; margin-top:0 }
+</style>
+<h3 class="page-title">
+    Dashboard
+</h3>
+<div class="row" ng-repeat="row in rows">
+    <div ng-class="{'col-md-6':(widget.config.size || 1) == 1, 'col-sm-6':(widget.config.size || 1) == 1, 'col-md-12':(widget.config.size || 1) > 1}" ng-repeat="widget in row">
+        <div class="portlet light" id="{{widget.cnt_id}}">
+            <div class="portlet-title" style="position:relative">
+                <div class="caption caption-md">
+                    <i class="icon-bar-chart font-green-haze"></i>
+                    <span class="caption-subject font-green-haze bold uppercase">{{widget.title || 'loading...'}}</span>
+                    <a class="caption-helper" href="#/report/{{widget.report_id}}">More</a>
+                </div>
+                <div class="tools">
+                    <a class="text-btn" title="上移" ng-click="changeWidgetPosition(widget, 'up')">U</a>
+                    <a class="text-btn" title="下移" ng-click="changeWidgetPosition(widget, 'down')">D</a>
+                    <a class="text-btn" title="置顶" ng-click="changeWidgetPosition(widget, 'top')">T</a>
+                    <a class="text-btn" title="置底" ng-click="changeWidgetPosition(widget, 'bottom')">B</a>
+                    <a class="config"></a>
+                    <a class="reload" ng-click="refreshWidget(widget, this)"></a>
+                    <a class="remove" ng-click="removeWidget(widget)"></a>
+                </div>
+                <div class="refresh-progress" style="position:absolute;left:0;height:1px;overflow:hidden;bottom:-1px;background:green;width:{{widget.refresh_progress}}%"></div>
+            </div>
+            <div class="portlet-body">
+                <div ng-repeat="(index, w) in widget.widgets">
+                    <div id="{{widget.cnt_id}}-{{index}}">
+                    </div>
+                    <div class="row" ng-if="w.chart">
+                        <div class="col-md-3 col-sm-3 text-stat" ng-repeat="label in w.cols" style="margin-top:10px">
+                            <span class="label label-sm label-success">{{label}}: </span>
+                            <h3>{{w.sum[label]|fnum}}</h3>
+                        </div>
+                    </div>
+                      <table ng-if="!w.chart && w.table" class="table table-striped table-hover" id="t-{{widget.cnt_id}}-{{index}}" datatable="" dt-options="dtOptions('t-' + widget.cnt_id + '-' + index)">
+                          <thead>
+                            <tr>
+                              <th ng-repeat="col_name in w.cols" ng-bind-html="col_name | rawHtml">
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-repeat="row in w.table">
+                              <td ng-repeat="col_name in w.cols" ng-bind-html="row[col_name] | rawHtml">
+                              </td>
+                            </tr>
+                          </tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+   <div class="col-md-6 col-sm-6" ng-if="chat_enable">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet light ">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-bubble font-red-sunglo"></i>
+                    <span class="caption-subject font-red-sunglo bold uppercase">Chats</span>
+                </div>
+                <div class="actions">
+                    <div class="portlet-input input-inline">
+                        <div class="input-icon right">
+                            <i class="icon-magnifier"></i>
+                            <input type="text" class="form-control input-circle" placeholder="search...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body" id="chats">
+                <div class="scroller" style="height: 341px;" data-always-visible="1" data-rail-visible1="1">
+                    <ul class="chats">
+                        <li class="{{message.me ? 'out' : 'in'}}" ng-repeat="message in chat_data.messages">
+                            <img class="avatar" alt="" ng-src="{{message.user.avatar || '/assets/admin/layout/img/avatar_small.png'}}">
+                            <div class="message">
+                                <span class="arrow">
+                                </span>
+                                <a href="javascript:;" class="name">{{message.user.nick}}</a>
+                                <span class="datetime">
+                                at {{message.rtime}}</span>
+                                <span class="body">
+                                {{message.message}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="chat-form">
+                    <div class="input-cont">
+                        <input class="form-control" type="text" placeholder="Type a message here..." id="chat-message-input" ng-keypress="$event.which == 13 && sendChatMessage()">
+                    </div>
+                    <div class="btn-cont">
+                        <span class="arrow">
+                        </span>
+                        <a href="" class="btn blue icn-only" ng-click="sendChatMessage()">
+                        <i class="fa fa-check icon-white"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div> 
+
+    <div class="col-md-6 col-sm-6">
+        <!-- BEGIN REGIONAL STATS PORTLET-->
+        <div class="portlet light ">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-share font-green-haze"></i>
+                    <span class="caption-subject font-green-haze bold uppercase">最近的活动</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="scroller" style="height: 410px;" data-always-visible="1" data-rail-visible1="1">
+                    <ul class="feeds">
+                        <li ng-repeat="item in activities">
+                            <div class="col1">
+                                <div class="cont">
+                                    <div class="cont-col1">
+                                        <div class="label label-sm label-info">
+                                            <i class="fa {{item.icon}}"></i>
+                                        </div>
+                                    </div>
+                                    <div class="cont-col2">
+                                        <div class="desc">
+                                            {{item.title}} 
+                                            <a href="{{item.action_url}}" ng-if="item.action_url">
+                                                <span class="label label-sm label-warning " ng-if="item.action_name">
+                                                    {{item.action_name}} <i class="fa fa-share"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col2">
+                                <div class="date">
+                                    {{item.time}}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- END REGIONAL STATS PORTLET-->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 col-sm-8">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption caption-md">
+                    <i class="icon-bar-chart font-green-haze"></i>
+                    <span class="caption-subject font-green-haze bold uppercase">最近常用报表</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-scrollable table-scrollable-borderless">
+                    <table class="table table-hover table-light">
+                        <thead>
+                            <tr class="uppercase">
+                                <th>报表ID</th>
+                                <th>报表名称</th>
+                                <th>上次访问时间</th>
+                                <th>平均访问耗时</th>
+                                <th>常用条件</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in reports">
+                                <td>{{item.id}}</td>
+                                <td><a href="{{item.url}}">{{item.name | rawHtml }}</a></td>
+                                <td>{{item.last_time}}</td>
+                                <td>{{item.avg_time}}S</td>
+                                <td>
+                                    <ul ng-if="item.conds">
+                                        <li ng-repeat="cond in item.conds"><a href="{{cond.url}}" ng-bind-html="cond.name | rawHtml"></a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+    
+</div>

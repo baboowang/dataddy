@@ -1,0 +1,48 @@
+<style>
+.page-500 {
+  text-align: center;
+}
+
+.page-500 .number {
+  display: inline-block;
+  letter-spacing: -10px;
+  line-height: 128px;
+  font-size: 128px;
+  font-weight: 300;
+  color: #ec8c8c;
+  text-align: right;
+}
+
+.page-500 .details {
+  margin-left: 40px;
+  display: inline-block;
+  text-align: left;
+}
+
+@media (max-width: 480px) {
+  .page-500 .number,
+  .page-500 .details {
+    text-align: center;
+    margin-left: 0px;
+  }
+}
+</style>
+<div class="row">
+    <div class="col-md-12 page-500">
+        <div class=" number">
+             500
+        </div>
+        <div class=" details">
+            <h3>有问题!</h3>
+            <p>
+<?php if ($err_msg) :?>
+                <?=$err_msg?><br/>
+<?php elseif ($exception) :?>
+                <?=$exception?><br/>
+<?php endif;?>
+                <a href="/">返回首页</a><br/><br/>
+            </p>
+        </div>
+    </div>
+</div>
+<?=@$ext_content?>

@@ -1,0 +1,43 @@
+<div page-breadcrumb="$root.paths"></div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs font-green-sharp"></i>
+                    <span class="caption-subject font-green-sharp bold uppercase">目录树</span>
+                </div>
+                <div class="actions">
+                    <input id="tree_search_input" class="input-small" placeholder="输入名称或id过滤"/>
+                    <a href="javascript:;" class="btn btn-circle red-sunglo" id="add-big-node-btn">
+                        <i class="fa fa-plus"></i> 添加 </a>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="menu-tree"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="portlet light bordered" id="menu-form-portlet">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-settings font-green-sharp"></i>
+                    <span class="caption-subject font-green-sharp bold uppercase">菜单详细配置</span>
+                    <span class="caption-helper">左侧目录树选中需要编辑的菜单</span>
+                </div>
+                <div class="actions">
+                    <a href="javascript:;" class="btn btn-circle blue" id="add-big-node-btn" onclick="$('#menu-form').trigger('submit')">
+                        <i class="fa fa-save"></i> 保 存 </a>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div data-ng-include="'/views/menu_form.html?v=0428'"></div>
+            </div>
+        </div>
+    </div>
+</div>

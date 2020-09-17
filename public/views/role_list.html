@@ -1,0 +1,40 @@
+<div class="portlet box yellow" id="role-controller">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-users"></i> 所有角色
+        </div>
+        <div class="tools">
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <!-- BEGIN FORM-->
+        <form action="#" class="form-horizontal">
+            <div class="form-body">
+                <div nestable="roles" change="roles_change" type="role" remove="remove" create="create" edit="edit">
+                    <div data-id="{{item.id}}">
+                        <span class="text-muted">[{{item.id}}]</span> {{item.name}}
+                        <a ui-sref="user.list({role:item.id})" class="badge badge-success">{{item.user_count || 0}}</a>
+                        <span style="position:absolute;right:10px">
+                            <a href="javascript:;" ng-show="item.writeable" class="btn btn-xs blue" ng-click="edit(item.id)"><i class="fa fa-edit"></i>编辑</a>
+                            <a href="javascript:;" ng-show="item.writeable" class="btn btn-xs red" mwl-confirm 
+                                                   title="你确认删除角色【{{item.name}}】吗？" 
+                                on-confirm="remove(item.id)">
+                                <i class="fa fa-times"></i>删除</a>
+                            <a href="javascript:;" class="btn btn-xs green" ng-click="create(item.id)"><i class="fa fa-plus"></i>新建子角色</a>
+                        <span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions fluid">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn green" ng-disabled="is_processing || !changed">Submit</button>
+                        <button type="button" class="btn default" ng-disabled="is_processing || !changed">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM-->
+    </div>
+</div>

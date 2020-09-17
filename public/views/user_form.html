@@ -1,0 +1,89 @@
+<div class="portlet box yellow">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-users"></i> {{title}}
+        </div>
+        <div class="tools">
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <!-- BEGIN FORM-->
+        <form class="form-horizontal" id="user-form" name="form" novalidate autocomplete="off">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-3">用户名 <span class="required" aria-required="true">
+                    * </span>
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" name="username" data-required="1" class="form-control" ng-model="user.username" ng-disabled="user.id"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">密码 <span class="required" aria-required="true">
+                    * </span>
+                    </label>
+                    <div class="col-md-4">
+                        <input type="password" name="password" class="form-control" ng-model="user.password" />
+                        <span class="help-block">不设置自动生成</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3">昵称<span class="required" aria-required="true" >
+                    * </span>
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" name="nick" data-required="1" class="form-control" ng-model="user.nick"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3">邮箱
+                    </label>
+                    <div class="col-md-4">
+                        <input type="email" name="email" class="form-control" ng-model="user.email" />
+                        <span class='form-invalid' ng-show="form.email.$error.email">email格式错误.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3">手机
+                    </label>
+                    <div class="col-md-4">
+                        <input type="text" name="mobile" class="form-control" ng-model="user.mobile" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3">角色 <span class="required" aria-required="true">
+                    * </span>
+                    </label>
+                    <div class="col-md-4">
+                        <ui-select multiple ng-model="user.roles" data-required="1"  theme="bootstrap" ng-disabled="disabled">
+                            <ui-select-match placeholder="选择角色...">{{$item.name}}</ui-select-match>
+                            <ui-select-choices repeat="item in roles | filter: $select.search">
+                            <span ng-bind-html="item.display_name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">配置</label>
+                    <div class="col-md-4">
+                        <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="user.config"></ui-codemirror>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn green" ng-disabled="form.$invalid">提交</button>
+                        <button type="button" class="btn default" ng-click="$root.$state.go('user.list')">取消</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM-->
+    </div>
+</div>

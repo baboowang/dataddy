@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+date_default_timezone_set('Asia/Shanghai');
+define("APPLICATION_PATH",  dirname(dirname(__FILE__)));
+require_once APPLICATION_PATH . '/vendor/autoload.php';
+$app = new \Yaf\Application(APPLICATION_PATH . "/conf/application.ini");
+$app->Bootstrap();
+
+$action = $argv[1];
+$id = $argv[2];
+$params_str = $argv[3] ?? '';
+
+$_GET['id'] = $id;
+
+if ($params_str) {
+    $params = [];
+    parse_str($params_str, $params);
+    if ($params) {
+        foreach ($params as $key => $value) {
+            $_GET[$key] = $value;
+        }
+    }
+}
+$req = new Yaf\Request\Simple('CLI', '', 'Report', $action, array());
+$app->getDispatcher()->dispatch($req);

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+<meta charset="utf-8"/>
+<title><?=d($info['name'], '报表')?></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta content="" name="description"/>
+<meta content="" name="author"/>
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="/css/font.css" rel="stylesheet" type="text/css"/>
+<link href="/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+<link href="/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/global/plugins/amcharts/amcharts/plugins/export/export.css" rel="stylesheet" type="text/css">
+
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN THEME STYLES -->
+<link href="/assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css">
+<link href="/assets/global/css/plugins.css" rel="stylesheet" type="text/css">
+<link href="/assets/admin/layout3/css/layout.css" rel="stylesheet" type="text/css">
+<link href="/assets/admin/layout3/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color">
+<link href="/assets/admin/layout3/css/custom.css" rel="stylesheet" type="text/css">
+<link href="/assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
+<link href="/datatables/plugins/bootstrap/datatables.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="/assets/global/plugins/datatables/extensions/FixedHeader/css/dataTables.fixedHeader.min.css" rel="stylesheet" type="text/css"/>
+<style>
+.dataTables_wrapper .row {
+margin-top: 0px;
+}
+.dataTables_wrapper .col-md-12 .btn-group{
+    float:right;
+        margin-right:10px;
+    margin-top:-65px;
+}
+.page-footer{position:static}
+</style>
+<!-- END THEME STYLES -->
+<link rel="shortcut icon" href="/favicon.ico"/>
+<script src="/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+<!-- IMPORTANT! Load jquery-ui.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+<script src="/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/assets/global/plugins/amcharts/amcharts/amcharts.js"></script>
+<script src="/assets/global/plugins/amcharts/amcharts/serial.js"></script>
+<script src="/assets/global/plugins/amcharts/amcharts/themes/light.js"></script>
+<script src="/assets/global/plugins/amcharts/amcharts/plugins/export/export.js"></script>
+<script src="/assets/global/plugins/select2/select2.min.js"></script>
+<script src="/assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+<script src="/assets/global/plugins/datatables/all.min.js"></script>
+<script src="/assets/global/plugins/datatables/extensions/FixedHeader/js/dataTables.fixedHeader.js"></script>
+
+<script src="/js/open.js"></script>
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<!-- DOC: Apply "page-header-menu-fixed" class to set the mega menu fixed  -->
+<!-- DOC: Apply "page-header-top-fixed" class to set the top menu fixed  -->
+<body>
+<!-- BEGIN PAGE CONTAINER -->
+<div class="page-container">
+
+    <?php if (empty($frame_mode)) : ?>
+	<!-- BEGIN PAGE HEAD -->
+	<div class="page-head">
+		<div class="container">
+			<!-- BEGIN PAGE TITLE -->
+			<div class="page-title">
+            <h1><?=$info['name']?></h1>
+			</div>
+			<!-- END PAGE TITLE -->
+		</div>
+	</div>
+	<!-- END PAGE HEAD -->
+    <?php endif; ?>
+
+	<!-- BEGIN PAGE CONTENT -->
+	<div class="page-content">
+		<div class="container">
+        <?php ddy_view_filter(); ?>
+
+<?=@$options['prepend_content']?>
+<?php if (!empty($options['remark'])) :?>
+<div class="alert alert-success">
+<?=$options['remark']?>
+</div>
+<?php endif; ?>
+
+<?php if (is_string($result['data'])) :?>
+<?=$result['data']?>
+<?php else :?>
+        <?php foreach ($result['data'] as $report_id => $rdata) : ?>
+        <?php if (@$rdata['chart_options'] && $rdata['rows'] && count($rdata['rows']) > 1) :?>
+        <div id="rchart-<?=$report_id?>">
+        </div>
+        <script>
+        $(function(){
+            render_chart('<?=$report_id?>', <?=json_encode($rdata['chart_options'])?>);
+        });
+        </script>
+        <?php endif;?>
+        <div class="portlet light bg-inverse<?=@$rdata['options']['invisible'] ? ' hide' : ''?>">
+            <div class="portlet-title">
+                <div class="caption font-green-haze">
+                    <i class="icon-paper-plane font-green-haze"></i>
+                    <span class="caption-subject bold uppercase"> <?=h(@$rdata['options']['title'])?> #<?=$report_id?></span>
+                </div>
+
+                <div class="actions">
+                </div>
+            </div>
+            <div class="portlet-body" style="height: auto;">
+
+        <?php if (empty($rdata['rows'])) :?>
+        <p>没有数据</p>
+        <?php else :?>
+        <?php
+            $dt_table = TRUE;
+
+            if (count($rdata['rows']) <= 1 ||
+                (isset($rdata['options']['dt']) && $rdata['options']['dt'] === FALSE) ||
+                isset($rdata['options']['merge_cell'])
+            ) {
+                $dt_table = FALSE;
+            }
+        ?>
+        <table class="table table-striped table-hover" id="rtable-<?=$report_id?>" >
+        <thead>
+        <tr>
+        <?php foreach ($rdata['rows'][0] as $colname => $val) :?>
+        <th><?=$colname?></th>
+        <?php endforeach;?>
+        </tr>
+        </thead>
+
+        <?php
+            $need_close_tbody = FALSE;
+            $merge_cell = !!@$rdata['options']['merge_cell'];
+
+            $rows = $rdata['rows'];
+
+            if ($merge_cell) {
+                $merge_fields = preg_split('@\s*,\s*@u', $rdata['options']['merge_cell']);
+                $merge_status = [];
+            }
+        ?>
+
+        <?php
+            $keys = array_keys($rows);
+            foreach ($keys as $i => $key) :
+                $row = $rows[$key];
+                $tr_attrs = d(@$rdata['attrs'][$i]['_'], []);
+                $is_summary = in_array("$key", ['sum', 'avg']);
+
+                if (!is_numeric($key)) {
+                    $class = explode('.', $key)[0] . ' summary';
+                    if (isset($tr_attrs['class'])) {
+                        $class .= ' ' . $tr_attrs['class'];
+                    }
+                    $tr_attrs['class'] = $class;
+                }
+
+                $tr_attr_list = [];
+                foreach ($tr_attrs as $attr_name => $attr_value) {
+                    $tr_attr_list[] = " {$attr_name}=\"{$attr_value}\"";
+                }
+                $tr_attr = implode('', $tr_attr_list);
+        ?>
+
+        <?php if ($is_summary) :?>
+        <?=$need_close_tbody ? '</tbody>' : ''?>
+        <tbody class="summary <?=$key?>">
+        <?php elseif (!$need_close_tbody) :?>
+        <tbody class="items">
+        <?php $need_close_tbody = TRUE; ?>
+        <?php endif;?>
+
+        <tr<?=$tr_attr?>>
+        <?php foreach ($row as $name => $val) :?>
+        <?php
+            $attrs = d(@$rdata['attrs'][$i][$name], []);
+            $link = '';
+            $attr_list = [];
+
+            if (isset($attrs['nan'])) {
+                unset($attrs['nan']);
+            } else {
+                $val = n($val, $name, $options);
+            }
+
+            foreach ($attrs as $attr_name => $attr_value) {
+                if ($attr_name == 'href') {
+                    $link = $attr_value;
+                } else {
+                    $attr_list[] = "{$attr_name}=\"{$attr_value}\"";
+                }
+            }
+
+            if ($merge_cell && in_array($name, $merge_fields)) {
+
+                $merge_index = array_search($name, $merge_fields);
+
+                if (isset($merge_status[$name])) {
+                    $merge_status[$name]--;
+                    if ($merge_status[$name] == 0) {
+                        unset($merge_status[$name]);
+                    }
+                    continue;
+                }
+
+                $rowspan = 1;
+
+                while(isset($keys[$i + $rowspan])) {
+                    if ($rows[$keys[$i + $rowspan]][$name] != $val) {
+                        break;
+                    }
+
+                    $rowspan++;
+                }
+
+                if ($merge_index > 0) {
+                    $last_merge_field = $merge_fields[$merge_index - 1];
+                    $last_status = isset($merge_status[$last_merge_field]) ? $merge_status[$last_merge_field] : 0;
+                    $max_rowspan = $last_status + 1;
+                    if ($rowspan > $max_rowspan) {
+                        $rowspan = $max_rowspan;
+                    }
+                }
+
+                if ($rowspan > 1) {
+                    $merge_status[$name] = $rowspan - 1;
+                    $attr_list[] = "rowspan=\"$rowspan\"";
+                }
+            }
+
+            $attrs = implode(' ', $attr_list);
+            if ($attrs) {
+                $attrs = " $attrs";
+            }
+        ?>
+
+        <?php if ($link) :?>
+        <td><a href="<?=$link?>"<?=$attrs?>><?=$val?></a></td>
+        <?php else:?>
+        <td<?=$attrs?>><?=$val?></td>
+        <?php endif;?>
+
+        <?php endforeach;?>
+        </tr>
+        <?php
+            if ($is_summary) {
+                echo '</tbody>';
+                $need_close_tbody = FALSE;
+            }
+        ?>
+        <?php endforeach;?>
+        <?=$need_close_tbody ? '</tobdy>' : ''?>
+        </table>
+        <?php if ($rdata['options']) :?>
+        <script>
+        set_table_options('<?=$report_id?>', <?=json_encode($rdata['options'])?>);
+        <?php if ($dt_table) :?>$(function(){render_dtable('<?=$report_id?>');});<?php endif;?>
+        </script>
+        <?php endif;?>
+        <?php endif;?>
+            </div>
+        </div>
+        <?php endforeach; ?>
+<?php endif;?>
+        <?=@$options['append_content']?>
+		</div>
+	</div>
+	<!-- END PAGE CONTENT -->
+</div>
+<!-- END PAGE CONTAINER -->
+
+<?php if (empty($frame_mode)) : ?>
+<!-- BEGIN FOOTER -->
+<div class="page-footer page-footer-open">
+	<div class="container">
+    2016 &copy; <?=Config::get('copyright', 'DATADDY.COM')?>.
+	</div>
+</div>
+<div class="scroll-to-top">
+	<i class="icon-arrow-up"></i>
+</div>
+<!-- END FOOTER -->
+<?php endif;?>
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<!-- BEGIN CORE PLUGINS -->
+<!--[if lt IE 9]>
+<script src="/assets/global/plugins/respond.min.js"></script>
+<script src="/assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+
+<!-- END CORE PLUGINS -->
+</body>
+<!-- END BODY -->
+</html>

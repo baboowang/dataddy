@@ -1,0 +1,10 @@
+{
+    "require": {
+        "mtdowling/cron-expression": "^1.0",
+        "michelf/php-markdown": "^1.6",
+        "guzzlehttp/guzzle": "^6.3",
+        "greenlion/php-sql-parser": "^4.1",
+        "elasticsearch/elasticsearch": "^6.0",
+        "corveda/php-sandbox": "^2.0"
+    }
+}

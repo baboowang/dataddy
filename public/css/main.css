@@ -1,0 +1,54 @@
+body{font-family:tahoma,arial,Hiragino Sans GB,Microsoft Yahei;font-size:12px}
+
+.cm-s-default .cm-comment{color:#aaa}
+.cm-s-default .cm-variable{color:green}
+
+.version-list{position:absolute;margin-top:-55px;margin-left:330px}
+#report-form-cnt .version-list{margin-top:-65px;margin-left:70px}
+
+div.chart{height:300px}
+
+.form-inline .form-control.date-picker{width:100px}
+
+.social-icons li .adeaz {
+  background: url(/assets/global/img/social/adeaz.png) no-repeat;
+}
+
+.chosen {min-width:150px}
+
+.datepicker{z-index:200}
+
+.theme-panel{z-index:300}
+
+table.table tr.summary td{font-weight:bold}
+
+table.table tr.child td:first-child{padding-left:40px}
+
+.page-sidebar .page-sidebar-menu .sub-menu li > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li > a {
+    font-size:13px;
+}
+@media (min-width: 992px) {
+    /* 992px */
+    /* Page content */
+    .page-content-wrapper {
+        float: left;
+        width: auto;
+        min-width: 100%;
+        max-width: 100%;
+        word-break:break-word;
+    }
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px 4px;
+}
+
+.portlet.light {
+    padding: 12px 5px 15px 5px;
+    background-color: #fff;
+}
+
+
+.page-content-wrapper .page-content {
+    padding: 25px 5px 10px 5px;
+}

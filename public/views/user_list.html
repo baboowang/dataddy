@@ -1,0 +1,47 @@
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet box yellow">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-globe"></i>所有用户
+                </div>
+                <div class="tools">
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-hover" id="user-table" datatable="ng" dt-options="dtOptions">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户名</th>
+                            <th>昵称</th>
+                            <th>角色</th>
+                            <th>上次登录时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in users | in_set:'roles':params.role">
+                            <td>{{user.id}}</td>
+                            <td>{{user.username}}<i class="glyphicon glyphicon-star font-yellow-gold" ng-if="user.is_admin=='1'" title="管理员"></i></td>
+                            <td>{{user.nick}}</td>
+                            <td>{{user.role_names}}</td>
+                            <td>{{user.last_login_time}}</td>
+                            <td>
+                                <a ui-sref="user.form({id:user.id})" class="btn btn-xs blue"><i class="fa fa-edit"></i>编辑</a>
+                                <a href="javascript:;" class="btn btn-xs red" mwl-confirm 
+                                                   title="你确认删除用户【{{user.nick}}】吗？" 
+                                on-confirm="remove(user.id)">
+                                <i class="fa fa-times"></i>删除</a>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
