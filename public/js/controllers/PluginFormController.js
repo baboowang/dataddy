@@ -3,28 +3,47 @@
 MetronicApp.controller('PluginFormController', [
     '$rootScope', '$scope', '$http', '$log', '$stateParams', 'Notification', function($rootScope, $scope, $http, $log, $stateParams, Notification) {
 
-    var clazz = $stateParams.clazz;
+    var id = $stateParams.id;
     $scope.plugin = {};
     $scope.$on('$viewContentLoaded', function() {
         // initialize core components
         Metronic.initAjax();
 
-        get_json('/plugin/detail.json', { clazz : clazz }, function(data){
-            $scope.plugin = data;
+        get_json('/plugin/detail.json', { id : id }, function(data){
+            $scope.plugin = data.plugin || {};
+            if ($scope.plugin.name) {
+                $scope.title = '编辑插件[' + $scope.plugin.name + ']';
+            }
+            $scope.refresh = true;
         });
     });
 
-    $scope.title = '编辑插件';
+    if (id) {
+      $rootScope.$broadcast('register_data_version', {
+          name : 'plugin',
+          pk : id,
+          onSelect : function(version_info, version_data) {
+              $scope.plugin = angular.fromJson(version_data);
+              $scope.refresh = true;
+          }
+      });
+    }
+
+    $scope.title = id ? '编辑插件' : '创建插件';
 
     $rootScope.paths = [{ url : '#/plugin/list', name : '插件列表' }, { url : 'javascript:;', name : $scope.title }];
 
     $scope.editorOptions = {
-        mode : { name : "javascript", json : true },
+        mode : "php",
         lineNumbers: true,
         matchBrackets: true,
         indentWithTabs: true,
         indentUnit: 4
     };
+
+    if ($rootScope.session.config.editor.vim_mode) {
+        $scope.editorOptions.keyMap = "vim";
+    }
 
     $('#plugin-form').on('submit', function(event){
         event.preventDefault();
@@ -33,9 +52,8 @@ MetronicApp.controller('PluginFormController', [
 
         $.post('/plugin/save', $scope.plugin, function(ret){
             if (ret && ret.code == 0) {
-                console.log($scope.plugin);
-                Notification.success($scope.title + "【" + $scope.plugin.className + "】成功！");
-                $rootScope.$state.go('plugin.list')
+                Notification.success($scope.title + "成功！");
+              //$rootScope.$state.go('plugin.list')
             } else {
                 Notification.error(ret ? ret.message : '系统错误');
             }

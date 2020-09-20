@@ -1,8 +1,10 @@
 <?php
 
-class DataddyPlugin extends \Yaf\Plugin_Abstract {
-    public function routerShutdown(\Yaf\Request_Abstract $request, \Yaf\Response_Abstract $response) {
-
+class DataddyPlugin extends \Yaf\Plugin_Abstract
+{
+    public function routerShutdown(\Yaf\Request_Abstract $request, \Yaf\Response_Abstract $response)
+    {
+        // fix url-encoded url
         if (preg_match('@^/%23@', $_SERVER['REQUEST_URI'])) {
             $correct_url = preg_replace('@^/%23@', '/#', $_SERVER['REQUEST_URI']);
             redirect($correct_url);
@@ -10,7 +12,6 @@ class DataddyPlugin extends \Yaf\Plugin_Abstract {
 
         $is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
             $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
-
         R('is_ajax', $is_ajax);
 
         if (strtolower($request->getControllerName()) == 'open') {
@@ -71,6 +72,17 @@ class DataddyPlugin extends \Yaf\Plugin_Abstract {
             $resource = "menu.{$pid}";
         }
 
+        # service plugin register
+        $plugin_manager = MY\PluginManager::getInstance();
+        $plugins = Config::getEnabledPlugins();
+
+        foreach ($plugins as $bundle_id => $scope) {
+            $scope = preg_split('@\s*,\s*@', trim($scope), -1, PREG_SPLIT_NO_EMPTY);
+            if (array_intersect($scope, ['all', $controller])) {
+                $plugin_manager->register($bundle_id);
+            }
+        }
+
         //var_dump([$resource, $mode, $this->permission->check($resource, $mode)]);exit;
         if (!R('permission')->check($resource, $mode) && !in_array($resource, ['login.auth', 'dataddy.gettrustticket'])) {
             $login_url = '/login?redirect_uri=' . urlencode($_SERVER['REQUEST_URI']);
@@ -98,7 +110,7 @@ class DataddyPlugin extends \Yaf\Plugin_Abstract {
                 $request->setParam('err_msg', '访问拒绝');
             }
         }
-     }
+    }
 
     public function dispatchLoopShutdown(\Yaf\Request_Abstract $request, \Yaf\Response_Abstract $response) {
         $user = R('user');

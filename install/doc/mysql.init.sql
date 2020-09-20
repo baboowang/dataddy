@@ -12,7 +12,7 @@ CREATE TABLE `config` (
 `last_update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`),
 UNIQUE KEY `namespace` (`namespace`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置表';
 
 --
 -- Table structure for table `data_version`
@@ -31,7 +31,7 @@ CREATE TABLE `data_version` (
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`),
 KEY `version_id` (`version_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据变更记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据变更记录';
 
 --
 -- Table structure for table `dsn`
@@ -48,43 +48,42 @@ CREATE TABLE `dsn` (
 `create_account` varchar(32) NOT NULL,
 PRIMARY KEY (`id`),
 UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据源';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据源';
 
 --
 -- Table structure for table `menuitem`
 --
 
 DROP TABLE IF EXISTS `menuitem`;
-CREATE TABLE `menuitem` (
-`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-`name` varchar(64) NOT NULL COMMENT 'title',
-`type` enum('alarm','report','link','folder') NOT NULL DEFAULT 'report',
-`uri` varchar(256) NOT NULL DEFAULT '' COMMENT 'uri',
-`content` text COMMENT '内容',
-`content_type` enum('sql','html','json','none') NOT NULL DEFAULT 'none',
-`safe_code` tinyint(4) NOT NULL DEFAULT '0',
-`dev_content` text NULL COMMENT '开发版本',
-`dev_uid` INT NOT NULL DEFAULT 0 COMMENT '开发人员ID',
-`release_version_time` TIMESTAMP NULL COMMENT '已发布的版本时间',
-`dev_version_time` TIMESTAMP NULL COMMENT '开发的版本时间',
-`dev_safe_code` TINYINT NOT NULL DEFAULT 0,
-`dsn` varchar(250) NOT NULL DEFAULT 'default' COMMENT '数据库连接',
-`desc` text NOT NULL COMMENT '说明',
-`crontab` varchar(250) NOT NULL DEFAULT '' COMMENT '定时任务设置',
-`mail_title` varchar(250) NOT NULL DEFAULT '',
-`mail_receiver` text NOT NULL COMMENT '邮件发送对象',
-`mail_memo` text NOT NULL COMMENT '邮件备注',
-`settings` text NOT NULL COMMENT '其他配置信息',
-`disabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否禁用',
-`visiable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '普通用户是否可见',
-`parent_id` int(11) NOT NULL DEFAULT '0' COMMENT '父级节点',
-`create_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'sql创建时间',
-`create_account` varchar(32) NOT NULL DEFAULT '' COMMENT '创建用户',
-`modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-`sort` smallint(6) NOT NULL DEFAULT '0',
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='菜单项';
-
+ CREATE TABLE `menuitem` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL COMMENT 'title',
+  `type` enum('alarm','report','link','folder') NOT NULL DEFAULT 'report',
+  `uri` varchar(256) NOT NULL DEFAULT '' COMMENT 'uri',
+  `content_type` enum('sql','html','json','none') NOT NULL DEFAULT 'none',
+  `dev_uid` int(11) NOT NULL DEFAULT '0' COMMENT '开发者UID',
+  `dev_content` text COMMENT '开发版内容',
+  `dev_safe_code` tinyint(4) NOT NULL DEFAULT '0',
+  `dev_version_time` timestamp NULL DEFAULT NULL COMMENT '开发版本时间',
+  `content` text COMMENT '发布版内容',
+  `safe_code` tinyint(4) NOT NULL DEFAULT '0',
+  `release_version_time` timestamp NULL DEFAULT NULL COMMENT '已发布的版本时间',
+  `dsn` varchar(250) NOT NULL DEFAULT 'default' COMMENT '数据库连接',
+  `desc` text NOT NULL COMMENT '说明',
+  `crontab` varchar(250) NOT NULL COMMENT '定时任务设置',
+  `mail_title` varchar(250) NOT NULL,
+  `mail_receiver` text NOT NULL COMMENT '邮件发送对象',
+  `mail_memo` text NOT NULL COMMENT '邮件备注',
+  `settings` text NOT NULL COMMENT '其他配置信息',
+  `disabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否禁用',
+  `visiable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '普通用户是否可见',
+  `parent_id` int(11) NOT NULL DEFAULT '0' COMMENT '父级节点',
+  `create_account` varchar(32) NOT NULL COMMENT '创建用户',
+  `sort` smallint(6) NOT NULL DEFAULT '0',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'sql创建时间',
+  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COMMENT='菜单项';
 
 
 DROP TABLE IF EXISTS `dashboard`
@@ -95,7 +94,7 @@ create table dashboard (
     config text null,
     update_at timestamp not null default current_timestamp on update current_timestamp,
     create_at timestamp not null default current_timestamp
-) engine=innodb default charset utf8;
+) engine=innodb default charset utf8mb4;
 
 --
 -- Table structure for table `role`
@@ -110,7 +109,7 @@ CREATE TABLE `role` (
 `config` text COMMENT '其它配置',
 PRIMARY KEY (`id`),
 UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色定义';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色定义';
 
 --
 -- Table structure for table `statistic`
@@ -126,7 +125,7 @@ CREATE TABLE `statistic` (
 `use_time` float NOT NULL,
 `access_user` varchar(50) NOT NULL DEFAULT '',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报表访问统计';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报表访问统计';
 
 --
 -- Table structure for table `user`
@@ -149,10 +148,58 @@ CREATE TABLE `user` (
 `config` text,
 PRIMARY KEY (`id`),
 UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户';
+
+DROP TABLE IF EXISTS `plugin`;
+CREATE TABLE `plugin` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`name` varchar(100) NOT NULL COMMENT '插件名称',
+`type` enum('sso','filter','none') NOT NULL DEFAULT 'none' COMMENT '插件类型',
+`author` varchar(50) NOT NULL COMMENT '作者',
+`bundle_id` varchar(128) NOT NULL,
+`version` varchar(15) NOT NULL COMMENT '版本号',
+`scope` varchar(50) NOT NULL DEFAULT 'report',
+`enable` tinyint(4) NOT NULL COMMENT '是否启用',
+`email` varchar(50) NOT NULL COMMENT '邮件',
+`content` text,
+`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`),
+UNIQUE KEY `idx_unique_bundle_id` (`bundle_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `trust_ticket`;
+CREATE TABLE `trust_ticket` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `server` varchar(20) NOT NULL,
+  `ticket` varchar(32) NOT NULL,
+  `expire_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `client_ip` varchar(20) DEFAULT NULL,
+  `username` varchar(50) NOT NULL,
+  `uid` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ticket` (`ticket`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '授权给第三方的Ticket';
+
+DROP TABLE IF EXISTS `sql_log`;
+CREATE TABLE `sql_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_id` int(11) NOT NULL DEFAULT '0',
+  `uid` int(11) NOT NULL DEFAULT '0',
+  `nick` varchar(20) NOT NULL DEFAULT '',
+  `dsn` varchar(20) NOT NULL DEFAULT '',
+  `sql_content` text,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT '0',
+  `use_time` int(11) NOT NULL DEFAULT '0' COMMENT '执行用户(ms)',
+  `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `create_at` (`create_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '报表SQL执行日志';
+
 
 INSERT role (id, name, parent_id) VALUES (1, '管理员', 0);
-
 
 --  生成基本目录数据
 INSERT INTO `menuitem` (`id`, `name`, `type`, `uri`, `content`, `content_type`, `safe_code`, `dsn`, `desc`, `crontab`, `mail_title`, `mail_receiver`, `mail_memo`, `settings`, `disabled`, `visiable`, `parent_id`, `create_time`, `create_account`, `modify_time`, `sort`) VALUES

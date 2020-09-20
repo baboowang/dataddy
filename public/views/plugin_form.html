@@ -1,32 +1,62 @@
-<div class="portlet box yellow">
-    <div class="portlet-title">
-        <div class="caption">
-            <i class="fa fa-plugins"></i> {{title}}
-        </div>
-        <div class="tools">
-        </div>
+<style>
+.CodeMirror{
+  border-bottom:1px solid #e5e5e5;
+  height:auto;
+}
+.error-circle{
+    background: #990000;
+    color: white;
+    font-weight: bold;
+}
+.code-error-widget{
+    background: #FF6666;
+    font-style:italic
+}
+</style>
+<div class="portlet light bordered">
+  <div class="portlet-title">
+    <div class="caption">
+      <i class="fa fa-plugins"></i>
+      <span class="caption-subject font-green-sharp bold uppercase">{{title}}</span>
+      <span class="caption-helper"></span>
     </div>
-    <div class="portlet-body form">
-        <!-- BEGIN FORM-->
-        <form class="form-horizontal" id="plugin-form" name="form" novalidate>
-            <div class="form-body">
-                <input type="text" name="class" data-required="1" class="form-control" ng-model="plugin.class" disabled/>
 
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="plugin.source"></ui-codemirror>
-                    </div>
-                </div>
-            </div>
-            <div class="form-actions">
-                <div class="row">
-                    <div class="col-md-offset-3 col-md-9">
-                        <button type="submit" class="btn green" ng-disabled="form.$invalid">提交</button>
-                        <button type="button" class="btn default" ng-click="$root.$state.go('plugin.list')">取消</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <!-- END FORM-->
+    <div class="tools">
     </div>
+  </div>
+  <div class="portlet-body form">
+    <div class="version-list" data-ng-include="'/views/data_version.html'"></div>
+    <!-- BEGIN FORM-->
+    <form id="plugin-form" name="form" novalidate>
+        <div class="form-body">
+          <div class="form-group form-md-line-input">
+            <div class="input-icon">
+              <label>插件代码 <a href="javascript:;" ng-init="collapse_content_help=true" ng-click="collapse_content_help=!collapse_content_help"><i class="fa fa-question-circle"></i></a></label>
+                <div class="note note-success" collapse="collapse_content_help">
+                  <h4 class="block">文档注释</h4>
+                  <pre>
+/**
+ * @name            插件名称
+ * @version         0.0.1
+ * @description     插件简要介绍
+ * @author          作者
+ * @email           作者邮箱
+ */
+                  </pre>
+                </div>
+              <ui-codemirror ui-codemirror-opts="editorOptions" ng-model="plugin.content" ui-refresh="refresh"></ui-codemirror>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions noborder">
+          <div class="row">
+            <div class="col-md-offset-3 col-md-9">
+              <button type="submit" class="btn green" ng-disabled="form.$invalid">提交</button>
+              <button type="button" class="btn default" ng-click="$root.$state.go('plugin.list')">返回列表</button>
+            </div>
+          </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+  </div>
 </div>

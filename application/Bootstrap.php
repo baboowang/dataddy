@@ -15,7 +15,7 @@ class Bootstrap extends Yaf\Bootstrap_Abstract {
 
         GG\Db\Model\Base::setForceReadOnMater();
 
-        class_alias('\GG\Config', 'Config');
+        class_alias('\MY\Config', 'Config');
 
         R('starttime', microtime(TRUE));
 
@@ -23,11 +23,7 @@ class Bootstrap extends Yaf\Bootstrap_Abstract {
 
         $dispatcher->setView($view);
 
-        Config::add(Yaf\Application::app()->getConfig()->toArray());
-
-        if ($config = \ConfigModel::get('system')) {
-            Config::add($config);
-        }
+        Config::init();
 
         $uid = GG\Session::getInstance()->getUserID();
 
@@ -66,21 +62,10 @@ class Bootstrap extends Yaf\Bootstrap_Abstract {
 
         R('permission', new MY\Permission($roles, $is_admin));
 
+        MY\PluginManager::getInstance()
+            ->setDispatcher($dispatcher);
+
         $dispatcher->registerPlugin(new DataddyPlugin());
-
-        # Plugin register
-        $plugin_manager = MY\PluginManager::getInstance();
-        $plugin_manager->setDispatcher($dispatcher);
-        $plugins = Config::get("plugins", []);
-
-        if (is_string($plugins)) {
-            $plugins = explode(",", $plugins);
-        }
-
-        foreach ($plugins as $name) {
-            $className = trim($name);
-            $plugin_manager->register($name);
-        }
 
         error_reporting(E_ALL ^ E_NOTICE);
         ini_set('display_errors', '1');
@@ -89,11 +74,6 @@ class Bootstrap extends Yaf\Bootstrap_Abstract {
     private function isCli()
     {
         return (php_sapi_name() === 'cli') ? true : false;
-    }
-
-    private function getCliUid()
-    {
-        return 6;
     }
 }
 /* End of file <`2:filename`>.php */

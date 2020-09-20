@@ -1,7 +1,10 @@
 <?php
+use GG\Config;
+
 class ConfigModel extends \GG\Db\Model\Base {
 
     const DEFAULT_NAMESPACE = 'system';
+    const DEFAULT_CONFIG = 'system:default';
 
     public function __construct()
     {
@@ -41,10 +44,18 @@ class ConfigModel extends \GG\Db\Model\Base {
         $data = [
             'namespace' => $namespace,
             'name' => $realname,
-            'value' => json_encode($value),
+            'value' => json_encode($value, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE),
         ];
 
         return $m->replace($data, $data);
+    }
+
+    public static function setDefault($key, $value)
+    {
+        $cfg = self::get(self::DEFAULT_CONFIG);
+        $cfg[$key] = $value;
+
+        return self::set(self::DEFAULT_CONFIG, $cfg);
     }
 }
 /* End of file filename.php */

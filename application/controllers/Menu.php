@@ -73,7 +73,7 @@ class MenuController extends MY\Controller_Abstract {
                 $data['menu']['dev_user'] = [ 'nick' => $user['nick'] ];
             }
 
-            $data['versions'] = $this->_getVersionList('menuitem', $menu_id);
+            //$data['versions'] = $this->_getVersionList('menuitem', $menu_id);
 
             R('title', '菜单编辑:' . $data['menu']['name']);
         }

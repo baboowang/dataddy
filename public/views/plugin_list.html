@@ -14,28 +14,41 @@
                 <table class="table table-striped table-hover" id="plugin-table" datatable="ng" dt-options="dtOptions">
                     <thead>
                         <tr>
-                            <th>名称</th>
                             <th>包</th>
+                            <th>名称</th>
                             <th>作者</th>
                             <th>版本</th>
+                            <th>作用域</th>
                             <th>启用</th>
-                            <th>时间</th>
+                            <th>更新时间</th>
                             <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="plugin in plugins">
-                            <td>{{plugin.className}}</td>
+                            <td>{{plugin.bundle_id}}</td>
+                            <td>{{plugin.name}}</td>
                             <td>{{plugin.author}}</td>
                             <td>{{plugin.version}}</td>
-                            <td>{{plugin.abstract}}</td>
-                            <td>{{plugin.enable}}</td>
-                            <td>{{plugin.since}}</td>
+                            <td>{{plugin.scope}}</td>
+                            <td>{{plugin.enable == '1' ? '是' : '否'}}</td>
+                            <td>{{plugin.update_time}}</td>
                             <td>
-                                <a ui-sref="plugin.form({clazz:plugin.className})" class="btn btn-xs blue"><i class="fa fa-edit"></i>编辑</a>
-                                <a href="javascript:;" class="btn btn-xs red" mwl-confirm 
-                                                   title="你确认删除插件【{{plugin.className}}】吗？"
-                                on-confirm="remove(plugin.className)">
+                                <a ui-sref="plugin.form({id:plugin.id})" class="btn btn-xs blue">
+                                  <i class="fa fa-edit"></i>编辑
+                                </a>
+
+                                <a class="btn btn-xs green" ng-if="plugin.enable == '0'" ng-click="enable_plugin(plugin.id)">
+                                  <i class="fa fa-play"></i>启用
+                                </a>
+
+                                <a class="btn btn-xs green" ng-if="plugin.enable == '1'" ng-click="disable_plugin(plugin.id)">
+                                  <i class="fa fa-pause"></i>停用
+                                </a>
+
+                                <a href="javascript:;" class="btn btn-xs red" mwl-confirm
+                                  title="你确认删除插件【{{plugin.className}}】吗？"
+                                  on-confirm="remove(plugin.id)">
                                 <i class="fa fa-times"></i>删除</a>
 
                             </td>

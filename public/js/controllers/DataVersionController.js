@@ -10,6 +10,7 @@ MetronicApp.controller('DataVersionController', function($rootScope, $scope, $ht
 
      var dh = $rootScope.$on('register_data_version', function(e, context) {
         $scope.context = context;
+        $scope.cur_version = null;
     });
 
     $scope.cur_version = null;

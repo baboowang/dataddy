@@ -164,7 +164,6 @@ ALTER TABLE `menuitem` ADD COLUMN `sort` smallint NOT NULL DEFAULT 0 AFTER `modi
 --@desc 添加用户主题设置
 ------------------------------------------------------
 ALTER TABLE user ADD COLUMN theme varchar(1024) NOT NULL DEFAULT '';
-<`0:`>
 
 --@author 王刚
 --@date 2016/04/25 14:04:26
@@ -172,4 +171,10 @@ ALTER TABLE user ADD COLUMN theme varchar(1024) NOT NULL DEFAULT '';
 ------------------------------------------------------
 ALTER TABLE user ADD COLUMN avatar_small varchar(255) NOT NULL DEFAULT '',
 ADD COLUMN config TEXT NULL;
-<`0:`>
+
+--@author 王刚
+--date 2020-09-18 16:11
+--@desc 插件代码写表
+ALTER TABLE plugin ADD COLUMN content NULL;
+ALTER TABLE plugin ADD COLUMN update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+ALTER TABLE plugin ADD COLUMN scope varchar(50) NOT NULL default 'report';

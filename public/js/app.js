@@ -723,7 +723,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         // Dashboard
         .state('dashboard', {
             url: "/dashboard",
-            templateUrl: "/views/dashboard.html?v=1126",
+            templateUrl: "/views/dashboard.html?v=" + APP_VERSION,
             data: {pageTitle: 'Dashboard'},
             controller: "DashboardController",
             resolve: {
@@ -732,7 +732,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         name: 'MetronicApp',
                         insertBefore: '#ng_load_plugins_before',
                         files: [
-                             '/js/controllers/DashboardController.js?v=1126'
+                             '/js/controllers/DashboardController.js?v=' + APP_VERSION
                         ]
                     });
                 }]
@@ -741,13 +741,13 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('role', {
             url : "/role",
-            templateUrl : "/views/role.html",
+            templateUrl : "/views/role.html?v=" + APP_VERSION,
             data : { pageTitle : '角色管理' }
         })
 
         .state('role.list', {
             url: "/list",
-            templateUrl: "/views/role_list.html",
+            templateUrl: "/views/role_list.html?v=" + APP_VERSION,
             data: {pageTitle: '角色管理'},
             controller: "RoleController",
             resolve: {
@@ -758,7 +758,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         files: [
                             '/assets/global/plugins/jquery-nestable/jquery.nestable.css',
                             '/assets/global/plugins/jquery-nestable/jquery.nestable.js',
-                            '/js/controllers/RoleController.js'
+                            '/js/controllers/RoleController.js?v=' + APP_VERSION
                         ]
                     });
                 }]
@@ -767,7 +767,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('role.form', {
             url: "/form?id&parent_id",
-            templateUrl: "/views/role_form.html",
+            templateUrl: "/views/role_form.html?v=" + APP_VERSION,
             data: {pageTitle: '角色管理'},
             controller: "RoleFormController",
             resolve: {
@@ -784,7 +784,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         files: [
                             '/assets/global/plugins/jstree/dist/themes/default/style.min.css',
                             '/assets/global/plugins/jstree/dist/jstree.min.js',
-                            '/js/controllers/RoleFormController.js'
+                            '/js/controllers/RoleFormController.js?v=' + APP_VERSION
                         ]
                     }, {
                         name: 'ui.codemirror',
@@ -799,13 +799,13 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('user', {
             url: "/user",
-            templateUrl: "/views/user.html",
+            templateUrl: "/views/user.html?v=" + APP_VERSION,
             data: {pageTitle: '用户管理'}
         })
 
         .state('user.list', {
             url: "/list?role",
-            templateUrl: "/views/user_list.html",
+            templateUrl: "/views/user_list.html?v=" + APP_VERSION,
             data: {pageTitle: '用户列表'},
             controller: "UserController",
             resolve: {
@@ -814,7 +814,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         name: 'MetronicApp',
                         files: [
 
-                            '/js/controllers/UserController.js'
+                            '/js/controllers/UserController.js?v=' + APP_VERSION
                         ]
                     });
                 }]
@@ -823,7 +823,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('user.form', {
             url: "/form?id",
-            templateUrl: "/views/user_form.html?v=1204",
+            templateUrl: "/views/user_form.html?v=" + APP_VERSION,
             data: {pageTitle: '编辑用户'},
             controller: "UserFormController",
             resolve: {
@@ -839,7 +839,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         name: 'MetronicApp',
                         files: [
 
-                            '/js/controllers/UserFormController.js'
+                            '/js/controllers/UserFormController.js?v=' + APP_VERSION
                         ]
                     }, {
                         name: 'ui.codemirror',
@@ -854,7 +854,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('dsn', {
             url: '/dsn',
-            templateUrl : '/views/dsn.html',
+            templateUrl : '/views/dsn.html?v=' + APP_VERSION,
             controller: "DsnController",
             data: { pageTitle: 'DSN管理' },
             resolve: {
@@ -862,7 +862,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     return $ocLazyLoad.load({
                         name: 'MetronicApp',
                         files: [
-                            '/js/controllers/DsnController.js'
+                            '/js/controllers/DsnController.js?v=' + APP_VERSION
                         ]
                     });
                 }]
@@ -871,7 +871,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('config', {
             url: '/config',
-            templateUrl : '/views/config.html',
+            templateUrl : '/views/config.html?v=' + APP_VERSION,
             controller: "ConfigController",
             data: { pageTitle: '配置管理' },
             resolve: {
@@ -879,7 +879,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     return $ocLazyLoad.load([{
                         name: 'MetronicApp',
                         files: [
-                            '/js/controllers/ConfigController.js'
+                            '/js/controllers/ConfigController.js?v=' + APP_VERSION
                         ]
                     }, {
                         name: 'ui.codemirror',
@@ -894,7 +894,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('menu', {
             url: "/menu?id",
-            templateUrl: "/views/menu.html?v0428",
+            templateUrl: "/views/menu.html?v=" + APP_VERSION,
             data: {pageTitle: '菜单管理'},
             controller: "MenuController",
             resolve: {
@@ -904,9 +904,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         files: [
                             '/assets/global/plugins/jstree/dist/themes/default/style.min.css',
                             '/assets/global/plugins/jstree/dist/jstree.min.js',
-                            '/js/controllers/MenuFormController.js?v=1126',
-                            '/js/controllers/MenuController.js',
-                            '/js/controllers/DataVersionController.js'
+                            '/js/controllers/MenuFormController.js?v=' + APP_VERSION,
+                            '/js/controllers/MenuController.js?v=' + APP_VERSION,
+                            '/js/controllers/DataVersionController.js?v=' + APP_VERSION
                         ]
                     }, {
                         name: 'ui.codemirror',
@@ -921,7 +921,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('cron', {
             url: "/cron",
-            templateUrl: "/views/cron.html",
+            templateUrl: "/views/cron.html?v=" + APP_VERSION,
             data: {pageTitle: 'Cron管理'},
             controller: "CronController",
             resolve: {
@@ -931,7 +931,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                         files: [
                             '/assets/global/plugins/jquery-nestable/jquery.nestable.css',
                             '/assets/global/plugins/jquery-nestable/jquery.nestable.js',
-                            '/js/controllers/CronController.js'
+                            '/js/controllers/CronController.js?v=' + APP_VERSION
                         ]
                     });
                 }]
@@ -939,14 +939,24 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         })
 
         .state('plugin', {
-            url : "/plugin",
-            templateUrl : "/views/plugin.html",
-            data : { pageTitle : '插件管理' }
+            url : "/plugin?id",
+            templateUrl : "/views/plugin.html?v=" + APP_VERSION,
+            data : { pageTitle : '插件管理' },
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'MetronicApp',
+                        files: [
+                            '/js/controllers/DataVersionController.js?v=' + APP_VERSION
+                        ]
+                    });
+                }]
+            }
         })
 
         .state('plugin.list', {
             url: "/list",
-            templateUrl: "/views/plugin_list.html",
+            templateUrl: "/views/plugin_list.html?v=" + APP_VERSION,
             data: {pageTitle: '插件管理'},
             controller: "PluginController",
             resolve: {
@@ -954,7 +964,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                     return $ocLazyLoad.load({
                         name: 'MetronicApp',
                         files: [
-                            '/js/controllers/PluginController.js'
+                            '/js/controllers/PluginController.js?v=' + APP_VERSION
                         ]
                     });
                 }]
@@ -963,7 +973,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('plugin.form', {
             url: "/form?clazz",
-            templateUrl: "/views/plugin_form.html",
+            templateUrl: "/views/plugin_form.html?v=" + APP_VERSION,
             data: {pageTitle: '编辑插件'},
             controller: "PluginFormController",
             resolve: {
@@ -977,7 +987,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
                             '/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css',
                             "/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js",
                             "/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
-                            '/js/controllers/PluginFormController.js'
+                            '/js/controllers/PluginFormController.js?v=' + APP_VERSION
                         ]
                     }, {
                         name: 'ui.codemirror',
@@ -992,7 +1002,7 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
         .state('report', {
             url: "/report/:id?query",
-            templateUrl: "/views/report.html?v=0427",
+            templateUrl: "/views/report.html?v=" + APP_VERSION,
             data: {pageTitle: '报表'},
             controller: "ReportController",
             resolve: {
@@ -1005,9 +1015,9 @@ MetronicApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
 
                             "/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js",
                             "/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
-                            '/js/controllers/MenuFormController.js',
-                            '/js/controllers/ReportController.js?v=0926',
-                            '/js/controllers/DataVersionController.js'
+                            '/js/controllers/MenuFormController.js?v=' + APP_VERSION,
+                            '/js/controllers/ReportController.js?v=' + APP_VERSION,
+                            '/js/controllers/DataVersionController.js?v=' + APP_VERSION
                         ]
                     },{
                         name: 'ui.codemirror',

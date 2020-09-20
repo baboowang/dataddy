@@ -103,15 +103,13 @@ class PluginManager {
         return $this->_PLUGINS;
     }
 
-    public function getPlugin($name, $withContent = false)
+    public function getPlugin($name)
     {
         if (!$this->isRegistered($name)) {
             return null;
         }
         $plugin = $this->_PLUGINS[self::name2Id($name)];
-        if ($withContent) {
-            $plugin['source'] = $this->getPluginSource($className);
-        }
+
         return $plugin;
     }
 
@@ -147,41 +145,84 @@ class PluginManager {
         return implode("\n", $html);
     }
 
-    public function updatePlugin($className, $source)
+    public static function writePluginSourceFile($name, $source)
     {
-        $file = $this->classPath($className);
+        $file = self::pluginPath($name);
         $dir = dirname($file);
+        if (!is_writeable(dirname($dir))) {
+            throw new \Exception("插件目录{$dir}没有写权限");
+        }
         if (!file_exists($dir)) {
             mkdir($dir);
         }
+
         return file_put_contents($file, $source, LOCK_EX);
     }
 
-    private function getPluginSource($className)
-    {
-        $file = $this->classPath($className);
-        if (file_exists($file)) {
-            return file_get_contents($file);
-        }
-        return 'plugin file not found';
+    private static function pluginPath($name) {
+
+        return implode(DIRECTORY_SEPARATOR, [
+            APPLICATION_PATH,
+            'plugins',
+            str_replace('\\', DIRECTORY_SEPARATOR, $name) . '.php'
+        ]);
     }
 
-    private function classPath($className) {
-        $pos = strrpos($className, '_');
-        $dir = substr($className, 0, $pos);
-        $dir = str_replace('_', DIRECTORY_SEPARATOR, $dir);
-        $file = substr($className, $pos + 1, strlen($className));
+    public static function parsePluginContent($content)
+    {
+        $result = [];
 
-        $filePath = array(
+        if (preg_match('/namespace\s+(\S+)/', $content, $ma)) {
+            $namespace = trim($ma[1], ';');
+        } else {
+            throw new \Exception("插件名字空间未定义");
+        }
+
+        if (preg_match('/class\s+(\S+)/', $content, $ma)) {
+            $class_name = $ma[1];
+        } else {
+            throw new \Exception("插件类名未定义");
+        }
+
+        $result['bundle_id'] = $namespace . '\\' . $class_name;
+
+        $namespace_prefix = '@^\\\\?PL\\\\@';
+
+        if (!preg_match($namespace_prefix, $result['bundle_id'])) {
+            throw new \Exception('插件名字空间必须在PL名字空间下');
+        }
+
+        if (!preg_match('@^[\\\\\w\d]+$@', $result['bundle_id'])) {
+            throw new \Exception("插件类名不合法{$result['bundle_id']}");
+        }
+
+        $result['bundle_id'] = preg_replace($namespace_prefix, '', $result['bundle_id']);
+
+        $properties = ['name', 'version', 'author', 'email', 'scope'];
+
+        if (preg_match_all('/^\s*\*\s*@(\w+)\s+(.+?)\s*$/mu', $content, $ma)) {
+            foreach ($ma[1] as $i => $p) {
+                if (in_array($p, $properties)) {
+                    $result[$p] = $ma[2][$i];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public static function isPluginDirWritealbe()
+    {
+        $dir = $this->getPluginDir();
+
+        return is_writeable($dir);
+    }
+
+    public static function getPluginDir()
+    {
+        return implode(DIRECTORY_SEPARATOR, [
             APPLICATION_PATH,
-            'application',
-            'library',
-            PluginManager::PLUGIN_NAMESPACE,
-            strtolower($dir),
-            ucfirst(strtolower($file)) . '.php'
-        );
-        $path = implode(DIRECTORY_SEPARATOR, $filePath);
-
-        return $path;
+            'plugins'
+        ]);
     }
 }
