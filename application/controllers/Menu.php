@@ -273,12 +273,13 @@ class MenuController extends MY\Controller_Abstract {
         unset($result['release']);
 
         if (!$id) {
-            $result['visiable'] = $result['visiable'] ? 1 : 0;
             $result['desc'] = d(@$result['desc'], '');
             $result['settings'] = d(@$result['settings'], '');
             $result['mail_receiver'] = d(@$result['mail_receiver'], '');
             $result['mail_memo'] = d(@$result['mail_memo'], '');
         }
+
+        $result['visiable'] = $result['visiable'] ? 1 : 0;
 
         $result['dev_uid'] = $this->data['myuid'];
         $result['dev_version_time'] = date('Y-m-d H:i:s');
