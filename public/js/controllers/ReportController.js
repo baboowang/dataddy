@@ -79,7 +79,7 @@ MetronicApp.controller('ReportController', ['$rootScope', '$scope', '$http', '$l
                         sum[col_index] = 0;
 
                         $items.each(function(){
-                            sum[col_index] += 1 * (parseInt($.trim($(this).find('td:eq(' + col_index + ')').text()).replace(/,/g, '')) || 0);
+                            sum[col_index] += parseNumberFromElem($(this).find('td:eq(' + col_index + ')'));
                         });
                     }
                 });
@@ -396,6 +396,10 @@ MetronicApp.controller('ReportController', ['$rootScope', '$scope', '$http', '$l
     });
 }]);
 
+var parseNumberFromElem = function ($elem) {
+  return 1 * (parseFloat($.trim($elem.text()).replace(/\s+.+$/, '').replace(/[,%]/g, '')) || 0);
+};
+
 var render_chart = (function(){
 
     function _table(report_id) {
@@ -601,8 +605,9 @@ var render_chart = (function(){
             if (options.type == 'pie') {//如果是饼图的时候，对数据做
 
                 var _key = $.trim($cells.eq(_keyIndex[1]).text());
-                var _val = $.trim($cells.eq(_valIndex[1]).text());
-                var _val = 1 * (_val.replace(/[,%]/g, '') || 0) || 0;
+              //var _val = $.trim($cells.eq(_valIndex[1]).text());
+              // var _val = 1 * (_val.replace(/[,%]/g, '') || 0) || 0;
+                var _val = parseNumberFromElem($cells.eq(_valIndex[1]));
 
                 if (typeof _dataProvider[_key] == 'undefined') {
                     _dataProvider[_key] = 0;
@@ -612,9 +617,10 @@ var render_chart = (function(){
             } else {
                 for (var i = 0; i < graph_value_fields.length; i++) {
                     c = graph_value_fields[i];
-                    var s = $.trim($cells.eq(c[1]).text());
-                    var n = 1 * (s.replace(/[,%]/g, '') || 0);
-                    data_item[c[0]] = isNaN(n) ? s : n;
+                  //var s = $.trim($cells.eq(c[1]).text());
+                  //var n = 1 * (s.replace(/[,%]/g, '') || 0);
+                  //data_item[c[0]] = isNaN(n) ? s : n;
+                    data_item[c[0]] = parseNumberFromElem($cells.eq(c[1]));
                 }
 
                 options.dataProvider.push(data_item);
