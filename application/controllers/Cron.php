@@ -19,7 +19,7 @@ class CronController extends MY\Controller_Abstract {
         $attrs = [
             'select' => 'id,crontab,name'
         ];
-        $ret = M('menuitem')->select($where,$attrs);
+        $ret = M('menuItem')->select($where,$attrs);
         foreach ($ret as $item){
             $nitem = [];
             $cron = preg_replace('@^#@', '', $item['crontab']);
@@ -45,7 +45,7 @@ class CronController extends MY\Controller_Abstract {
         $data = [];
 
         if ($cron_id){
-            $data['cron'] = M('menuitem')->find($cron_id);
+            $data['cron'] = M('menuItem')->find($cron_id);
             R('title', 'CRON更新:' . $data['cron']['name']);
         }
 

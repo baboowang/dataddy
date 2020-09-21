@@ -133,7 +133,7 @@ class MenuController extends MY\Controller_Abstract {
         }
 
         $sort = 100;
-        $m = M('menuitem');
+        $m = M('menuItem');
         foreach ($tree_data as $node) {
             if ($node['id'] == $parent_id) continue;
             if ($node['parent'] == '#') $node['parent'] = 0;
