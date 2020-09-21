@@ -290,3 +290,18 @@ function check_state_string($name, $to_check = NULL)
 
     return $to_check === get_state_string();
 }
+
+function get_method($obj, $method)
+{
+    if (method_exists($obj, $method)) {
+        return $method;
+    }
+
+    $method = camelize($method, false);
+
+    if (method_exists($obj, $method)) {
+        return $method;
+    }
+
+    return false;
+}

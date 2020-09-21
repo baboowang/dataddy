@@ -105,6 +105,18 @@ class Data_Template
         $this->_cache = $cache;
         $this->_sql_log = $sql_log;
         self::$instance = $this;
+
+        $this->triggerEvent('template_engine_init', [$this]);
+    }
+
+    public function triggerEvent($event_name, $args = [])
+    {
+        foreach (self::$_PLUGINS as $plugin) {
+            $method = get_method($plugin, 'on_' . $event_name);
+            if ($method) {
+                call_user_func_array([$plugin, $method], $args);
+            }
+        }
     }
 
     public static function getInstance()
@@ -122,8 +134,9 @@ class Data_Template
         $key = 'plugin_hook_result_response';
         if (self::$_PLUGINS) {
             foreach (self::$_PLUGINS as $plugin) {
-                if (method_exists($plugin, $key)) {
-                    $plugin->$key($result);
+                $method = get_method($plugin, $key);
+                if ($method) {
+                    $plugin->$method($result);
                 }
             }
         }
@@ -134,8 +147,9 @@ class Data_Template
         $key = 'plugin_hook_before_sql';
         if (self::$_PLUGINS) {
             foreach (self::$_PLUGINS as $plugin) {
-                if (method_exists($plugin, $key)) {
-                    if ($plugin->$key($dsn, $sql, $options, $error) === false) {
+                $method = get_method($plugin, $key);
+                if ($method) {
+                    if ($plugin->$method($dsn, $sql, $options, $error) === false) {
                         return false;
                     }
                 }
@@ -1057,11 +1071,12 @@ EOT;
 
             if (self::$_PLUGINS) {
                 foreach (self::$_PLUGINS as $plugin) {
-                    if (method_exists($plugin, $key)) {
+                    $method = get_method($plugin, $key);
+                    if ($method) {
                         if ($is_delay_plugin) {
-                            $delay_plugins[] = [[$plugin, $key], $origin_key];
+                            $delay_plugins[] = [[$plugin, $method], $origin_key];
                         } else {
-                            $plugin->$key($report, $report['options'][$key], $this->_data);
+                            $plugin->$method($report, $report['options'][$key], $this->_data);
                         }
                         $is_custom_plugin = TRUE;
                         break;
@@ -1070,11 +1085,11 @@ EOT;
             }
 
             if (!$is_custom_plugin) {
-                if (method_exists($this, $key)) {
+                if ($method = get_method($this, $key)) {
                     if ($is_delay_plugin) {
-                        $delay_plugins[] = [[$this, $key], $origin_key];
+                        $delay_plugins[] = [[$this, $method], $origin_key];
                     } else {
-                        $this->$key($report, $report['options'][$key], $this->_data);
+                        $this->$method($report, $report['options'][$key], $this->_data);
                     }
                 } else if (is_callable("ddy_{$key}")) {
                     if ($is_delay_plugin) {
@@ -1116,20 +1131,20 @@ EOT;
                     if (in_array($config_name, ['def', 'count', 'tooltip'])) continue;
                     $method = NULL;
 
-                    $method_name = "field_" . $config_name;
+                    $key = "field_" . $config_name;
                     if (self::$_PLUGINS) {
                         foreach (self::$_PLUGINS as $plugin) {
-                            if (method_exists($plugin, $method_name)) {
+                            if ($method_name = get_method($plugin, $key)) {
                                 $method = [ $plugin, $method_name ];
                                 break;
                             }
                         }
                     }
-                    if (!$method && method_exists($this, $method_name)) {
+                    if (!$method && ($method_name = get_method($this, $key))) {
                         $method = [ $this, $method_name ];
                     }
-                    if (!$method && is_callable("ddy_{$method_name}")) {
-                        $method = "ddy_{$method_name}";
+                    if (!$method && is_callable("ddy_{$key}")) {
+                        $method = "ddy_{$key}";
                     }
 
                     foreach ($report['rows'] as $i => &$row) {
@@ -1139,13 +1154,21 @@ EOT;
                         $value = $row[$field];
                         $attrs = [];
                         if ($method) {
-                            $attrs = call_user_func_array($method, [ $config_value, $value, $field, $i, $row, $report ]);
+                            $attrs = call_user_func_array(
+                                $method,
+                                [ $config_value, $value, $field, $i, $row, $report ]
+                            );
                             if (!is_array($attrs)) {
                                 $attrs = [ 'value' => $attrs ];
                             }
                         } else {
                             $attrs[$config_name] = $this->processRowTpl(
-                                $config_value, $row, $config_name == 'href' && strpos($config_value, '{') !== 0, FALSE, $i, $report['rows']
+                                $config_value,
+                                $row,
+                                $config_name == 'href' && strpos($config_value, '{') !== 0,
+                                FALSE,
+                                $i,
+                                $report['rows']
                             );
                         }
 
