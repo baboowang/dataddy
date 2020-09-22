@@ -1,7 +1,7 @@
 'use strict';
 
 MetronicApp.controller('PluginFormController', [
-    '$rootScope', '$scope', '$http', '$log', '$stateParams', 'Notification', function($rootScope, $scope, $http, $log, $stateParams, Notification) {
+    '$rootScope', '$scope', '$http', '$log', '$stateParams', 'Notification', '$timeout', function($rootScope, $scope, $http, $log, $stateParams, Notification, $timeout) {
 
     var id = $stateParams.id;
     $scope.plugin = {};
@@ -19,14 +19,17 @@ MetronicApp.controller('PluginFormController', [
     });
 
     if (id) {
-      $rootScope.$broadcast('register_data_version', {
-          name : 'plugin',
-          pk : id,
-          onSelect : function(version_info, version_data) {
-              $scope.plugin = angular.fromJson(version_data);
-              $scope.refresh = true;
-          }
-      });
+      //temp fix: waiting for data_version module loaded
+      $timeout(function() {
+        $rootScope.$broadcast('register_data_version', {
+            name : 'plugin',
+            pk : id,
+            onSelect : function(version_info, version_data) {
+                $scope.plugin = angular.fromJson(version_data);
+                $scope.refresh = true;
+            }
+        });
+      }, 3000);
     }
 
     $scope.title = id ? '编辑插件' : '创建插件';

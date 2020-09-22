@@ -113,9 +113,9 @@ class PluginManager {
         return $plugin;
     }
 
-    public function registerResource($url, $type = NULL)
+    public function registerResource($res, $type = NULL)
     {
-        if (is_null($type) && preg_match('@\.(\w+)$@', $url, $ma)) {
+        if (is_null($type) && preg_match('@\.(\w+)(?:\?[^/]*)?$@', $res, $ma)) {
             $type = $ma[1];
         }
 
@@ -124,21 +124,29 @@ class PluginManager {
             return FALSE;
         }
 
-        $this->_RESOURCE[strtolower($type)][] = $url;
+        $this->_RESOURCE[strtolower($type)][] = $res;
     }
 
     public function getResource()
     {
         $html = [];
         if (isset($this->_RESOURCE['css'])) {
-            foreach ($this->_RESOURCE['css'] as $url) {
-                $html[] = '<link href="' . $url . '" rel="stylesheet" type="text/css"/>';
+            foreach ($this->_RESOURCE['css'] as $res) {
+                if (preg_match('@[{\s;]@', $res)) {
+                    $html[] = "<style>\n$res\n</style>";
+                } else {
+                    $html[] = '<link href="' . $res . '" rel="stylesheet" type="text/css"/>';
+                }
             }
         }
 
         if (isset($this->_RESOURCE['js'])) {
-            foreach ($this->_RESOURCE['js'] as $url) {
-                $html[] = '<script src="' . $url . '"></script>';
+            foreach ($this->_RESOURCE['js'] as $res) {
+                if (preg_match('@[({\s;]@', $res)) {
+                    $html[] = "<script>\n$res\n</script>";
+                } else {
+                    $html[] = '<script src="' . $res . '"></script>';
+                }
             }
         }
 

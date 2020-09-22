@@ -12,7 +12,6 @@ MetronicApp.controller('DataVersionController', function($rootScope, $scope, $ht
         $scope.context = context;
         $scope.cur_version = null;
     });
-
     $scope.cur_version = null;
 
     var loadVersion = function() {

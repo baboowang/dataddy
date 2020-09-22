@@ -7,6 +7,7 @@ class PluginController extends MY\Controller_Abstract
     {
         parent::init();
         $this->form_validation = new \GG\FormValidation();
+        $this->_version_table = M('plugin')->getTable();
     }
 
     public function dataAction()
