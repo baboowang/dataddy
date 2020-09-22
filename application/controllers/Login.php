@@ -132,7 +132,7 @@ class LoginController extends MY\Controller_Abstract
         ));
 
         $session = \GG\Session::getInstance();
-        $expire = \GG\Config::get("cookie.expire", 3600);
+        $expire = \GG\Config::get("cookie.expire", 86400);
         $session->setUserID($userInfo['id'], false, $expire, '');
     }
 
