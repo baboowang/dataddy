@@ -56,6 +56,11 @@ MetronicApp.controller('PluginFormController', [
         $.post('/plugin/save', $scope.plugin, function(ret){
             if (ret && ret.code == 0) {
                 Notification.success($scope.title + "成功！");
+                if (!$scope.plugin.id) {
+                  $rootScope.$state.go('plugin.form', {id: ret.data.id});
+                } else {
+                  $scope.plugin = ret.data;
+                }
               //$rootScope.$state.go('plugin.list')
             } else {
                 Notification.error(ret ? ret.message : '系统错误');
