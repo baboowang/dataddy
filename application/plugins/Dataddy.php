@@ -75,10 +75,14 @@ class DataddyPlugin extends \Yaf\Plugin_Abstract
         # service plugin register
         $plugin_manager = MY\PluginManager::getInstance();
         $plugins = Config::getEnabledPlugins();
-
+        $common_scopes = ['plugin.data'];
         foreach ($plugins as $bundle_id => $scope) {
             $scope = preg_split('@\s*,\s*@', trim($scope), -1, PREG_SPLIT_NO_EMPTY);
-            if (array_intersect($scope, ['all', $controller])) {
+            $in_common_scope =
+                in_array($controller, $common_scopes) ||
+                in_array($controller . '.' . $action, $common_scopes)
+            ;
+            if ($in_common_scope || array_intersect($scope, ['all', $controller])) {
                 $plugin_manager->register($bundle_id);
             }
         }

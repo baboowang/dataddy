@@ -222,7 +222,22 @@ MetronicApp.controller('ReportController', ['$rootScope', '$scope', '$http', '$l
 
             report_loading(false);
 
-            $('#report-cnt select').select2();
+            $('#report-cnt select').each(function(i, elem) {
+              var $elem = $(elem),
+                options = {
+                  dropdownAutoWidth: true,
+                  language: 'zh-CN'
+                },
+                data_url = $elem.attr('data-url');
+              if (data_url) {
+                options.ajax = {
+                  url: data_url,
+                  dataType: 'json'
+                }
+              }
+              $elem.select2(options);
+            });
+
             $('#report-cnt .form-search').submit(function(event) {
                 event.preventDefault();
                 $rootScope.$state.go('report', { id : report_id, query : $(this).serialize() + '&_r=' + Math.random() });
