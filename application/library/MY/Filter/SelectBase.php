@@ -1,6 +1,8 @@
 <?php
 namespace MY;
 
+use GG\Db\Sql;
+
 abstract class Filter_SelectBase extends Filter_Abstract
 {
     protected static $data_urls;
@@ -100,7 +102,7 @@ abstract class Filter_SelectBase extends Filter_Abstract
             } else {
                 $sub_where[$value_column] = $params['term'];
             }
-            $sub_where[$text_column] = ['like' => "{$params['term']}%"];
+            $sub_where[Sql::rawName($text_column, false)] = ['like' => "{$params['term']}%"];
             $sub_where['__logic'] = 'or';
             if ($where) {
                 $where = [
