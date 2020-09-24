@@ -190,7 +190,7 @@ abstract class Filter_SelectBase extends Filter_Abstract
             $value = [ $value ];
         }
 
-        $options = $this->getOptions();
+        $options = $this->getSpecifiedOptions($value);
         foreach ($value as $item) {
             if (!isset($options[$item])) {
                 $this->error = '%s不是合法的值';
