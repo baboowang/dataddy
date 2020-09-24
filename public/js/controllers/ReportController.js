@@ -226,6 +226,7 @@ MetronicApp.controller('ReportController', ['$rootScope', '$scope', '$http', '$l
               var $elem = $(elem),
                 options = {
                   dropdownAutoWidth: true,
+                  allowClear: true,
                   language: 'zh-CN'
                 },
                 data_url = $elem.attr('data-url');

@@ -217,11 +217,11 @@ abstract class Filter_SelectBase extends Filter_Abstract
 
         $min_width = $this->param('minwidth', 150);
 
-        $attrs = '';
+        $attrs = 'data-allow-clear="true" data-placeholder="请选择"';
         $options = [];
         if ($this->use_ajax_data) {
             $data_url = static::getDataUrl($this);
-            $attrs = ' data-url="' . $data_url . '"';
+            $attrs .= ' data-url="' . $data_url . '"';
             if ($current_value) {
                 $options = $this->getSpecifiedOptions($current_value);
             }
