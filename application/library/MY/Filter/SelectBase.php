@@ -10,6 +10,7 @@ abstract class Filter_SelectBase extends Filter_Abstract
     protected $text_with_id = false;
     protected $value_type = 'int';
     protected $use_ajax_data = false;
+    protected $prefix_match = false;
 
     protected $value_column = 'id';
     protected $text_column = 'name';
@@ -102,7 +103,11 @@ abstract class Filter_SelectBase extends Filter_Abstract
             } else {
                 $sub_where[$value_column] = $params['term'];
             }
-            $sub_where[Sql::rawName($text_column, false)] = ['like' => "{$params['term']}%"];
+            $match = "{$params['term']}%";
+            if (!$this->prefix_match) {
+                $match = '%' . $match;
+            }
+            $sub_where[Sql::rawName($text_column, false)] = ['like' => $match];
             $sub_where['__logic'] = 'or';
             if ($where) {
                 $where = [
@@ -213,7 +218,7 @@ abstract class Filter_SelectBase extends Filter_Abstract
         $multiple = $is_multiple ? ' multiple="multiple"' : '';
         $current_value = $this->getValue();
 
-        if (!$is_multiple && $current_value) {
+        if (!$is_multiple) {
             $current_value = [ $current_value ];
         }
 
@@ -231,6 +236,7 @@ abstract class Filter_SelectBase extends Filter_Abstract
             $options = $this->getOptions();
         }
         $html = "<select name=\"{$name}\" {$multiple} {$attrs} class=\"chosen\" style=\"min-width:{$min_width}px\">";
+        $html .= '<option value="">请选择</option>';
         if (is_array($options)) {
             foreach ($options as $id => $name) {
                 $html .= sprintf(
