@@ -24,7 +24,7 @@ class Report extends \MY\Plugin_Abstract
             $base = $row[$config_value['base']];
         }
         if (!($value && is_numeric($value))) {
-            return $value
+            return $value;
         }
         if ($base && is_numeric($base)) {
             $percent = round($value / $base * 100, $config_value['dot'] ?? 0);
