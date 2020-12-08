@@ -38,6 +38,6 @@ class Report extends \MY\Plugin_Abstract
         if ($percent !== '-') {
             $percent .= '%';
         }
-        return "{$value} <span class='{$class}'>{$percent}</span>";
+        return "{$value} <em><span class='{$class}'>{$percent}</span></em>";
     }
 }
