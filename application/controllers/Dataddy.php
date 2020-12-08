@@ -253,7 +253,7 @@ class DataddyController extends MY\Controller_Abstract {
             }
 
             $fields = array_map(
-                create_function('$s', 'return \'"\' . trim($s) . \'"\';'),
+                @create_function('$s', 'return \'"\' . trim($s) . \'"\';'),
                 $fields
             );
             $row = implode(",", $fields);
