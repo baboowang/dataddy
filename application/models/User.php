@@ -14,8 +14,8 @@ class UserModel extends \GG\Db\Model\Base {
         $password = rand_str($length);
 
         $special_chars = '+=-@#~,.[]()!%^*$/';
-        $special_char = $special_chars{rand(1, strlen($special_chars)) - 1};
-        $password{rand(1, $length) - 1} = $special_char;
+        $special_char = $special_chars[ rand(1, strlen($special_chars)) - 1 ];
+        $password[ rand(1, $length) - 1 ] = $special_char;
 
         return $password;
     }

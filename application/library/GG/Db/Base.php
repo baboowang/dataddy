@@ -136,9 +136,9 @@ class Base
     {
         try {
             if ($this->_readOnMaster) {
-                $db = &$this->getDbWrite();
+                $db = $this->getDbWrite();
             } else {
-                $db = &$this->getDbRead();
+                $db = $this->getDbRead();
             }
 
             $this->_log("Execute Sql: $sql", LOG_DEBUG);
@@ -239,7 +239,7 @@ class Base
         return TRUE;
     }
 
-    public function & getDbWrite()
+    public function getDbWrite()
     {
         $badServerHosts = array();
         if ( ! $this->_dbWrite) {
@@ -259,7 +259,7 @@ class Base
         return FALSE;
     }
 
-    public function & getDbRead()
+    public function getDbRead()
     {
         $badServerHosts = array();
         if ( ! $this->_dbRead) {

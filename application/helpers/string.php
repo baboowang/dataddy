@@ -48,7 +48,7 @@ function str_truncate($str, $len)
         $n = strlen($str);
         $newStr = '';
         while ($i < $n) {
-            $ord = ord($str{$i});
+            $ord = ord($str[$i]);
             if ($ord > 224) {
                 $newStr .= substr($str, $i, 3);
                 $i += 3;
@@ -96,7 +96,7 @@ function camelize($str, $upperFirstChar = TRUE)
 		if ($i == 0 && !$upperFirstChar) {
 			$ret .= $segment;
 		} else {
-			$ret .= strtoupper($segment{0});
+			$ret .= strtoupper($segment[0]);
 			if (strlen($segment) > 1) {
 				$ret .= substr($segment, 1);
 			}
@@ -122,16 +122,16 @@ function rand_str($length = 32, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijkl
     $chars_length = (strlen($chars) - 1);
 
     // Start our string
-    $string = $chars{rand(0, $chars_length)};
+    $string = $chars[ rand(0, $chars_length) ];
 
     // Generate random string
     for ($i = 1; $i < $length; $i = strlen($string))
     {
         // Grab a random character from our list
-        $r = $chars{rand(0, $chars_length)};
+        $r = $chars[ rand(0, $chars_length) ];
 
         // Make sure the same two characters don't appear next to each other
-        if ($r != $string{$i - 1}) $string .=  $r;
+        if ($r != $string[ $i - 1 ]) $string .=  $r;
     }
 
     // Return the string

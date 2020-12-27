@@ -72,9 +72,9 @@ function param_constants() {
 
 /**
  * param_define_enum define the enum value
- * 
+ *
  * @param array $enums
- * @param string $enumType 
+ * @param string $enumType
  * @access public
  * @return void
  */
@@ -89,8 +89,8 @@ function param_define_enum($enums, $enumType = 'A')
 
 /**
  * param_define_regexp define the regexp for PARAM_REGEXP filter
- * 
- * @param mixed $regexp 
+ *
+ * @param mixed $regexp
  * @access public
  * @return void
  */
@@ -192,7 +192,7 @@ function param_cli($def, $prefix=null, &$scope=null, $default=array()) {
   $args = $GLOBALS['argv'];
 
   array_shift($args);
-  
+
   $data = array();
 
   $currentValue = NULL;
@@ -211,10 +211,10 @@ function param_cli($def, $prefix=null, &$scope=null, $default=array()) {
             if (!is_array($data[$currentName])) {
                 $data[$currentName] = array($data[$currentName]);
             }
-            $data[$currentName][] = $value; 
+            $data[$currentName][] = $value;
             $currentValue = &$data[$currentName][count($data[$currentName]) - 1];
         }
-        
+
         continue;
     }
 
@@ -233,8 +233,8 @@ function param_cli($def, $prefix=null, &$scope=null, $default=array()) {
 function _param_handle($source, $def, $prefix=null, &$scope=null, $default=array()) {
   extract(param_constants());
 
-  $_PARAM_NULLOK = 
-      $PARAM_UINT ^ $PARAM_SINT ^ $PARAM_FLOAT ^ $PARAM_BOOL ^  
+  $_PARAM_NULLOK =
+      $PARAM_UINT ^ $PARAM_SINT ^ $PARAM_FLOAT ^ $PARAM_BOOL ^
       $PARAM_HEX ^ $PARAM_ENUM_A ^ $PARAM_ENUM_B ^ $PARAM_ENUM_C ^
       $PARAM_REGEXP;
 
@@ -250,7 +250,7 @@ function _param_handle($source, $def, $prefix=null, &$scope=null, $default=array
 
   foreach ($def as $var => $flags) {
     $sourcevar = $var;  // var name in source
-    
+
     if ( ! is_numeric($flags)) {
         $realFlags = 0;
         foreach (explode('|', $flags) as $paramType) {
@@ -263,11 +263,11 @@ function _param_handle($source, $def, $prefix=null, &$scope=null, $default=array
         }
         $flags = $realFlags;
     }
-    
+
     if ($flags & $PARAM_HASHVAR) {
       $sourcevar = md5($var.$GLOBALS['param_md5key']);
     }
-    
+
     if (!isset($source[$sourcevar]) && isset($default[$sourcevar])) {
         $source[$sourcevar] = $default[$sourcevar];
     }
@@ -281,7 +281,7 @@ function _param_handle($source, $def, $prefix=null, &$scope=null, $default=array
         $scope[$prefix.$var] = $ref;
         continue;
       }
-      
+
       // support array type from forms
       if ($flags & $PARAM_ARRAY) {
         if (!is_array($ref)) {
@@ -316,8 +316,8 @@ function _param_handle($source, $def, $prefix=null, &$scope=null, $default=array
       }
 
         // enum
-        if ($flags & $PARAM_ENUM 
-            || $flags & $PARAM_ENUM_A 
+        if ($flags & $PARAM_ENUM
+            || $flags & $PARAM_ENUM_A
             || $flags & $PARAM_ENUM_B
             || $flags & $PARAM_ENUM_C
         ) {
@@ -329,7 +329,7 @@ function _param_handle($source, $def, $prefix=null, &$scope=null, $default=array
                     }
                 }
             }
-            
+
             if ( ! in_array($ref, $enums)) {
                 $scope[$prefix.$var] = NULL;
             } else {
@@ -349,7 +349,7 @@ function _param_handle($source, $def, $prefix=null, &$scope=null, $default=array
 
         if ($flags & $PARAM_UINT) { // unsigned (non-negative integer)
           if (ctype_digit($ref) || is_int($ref)) {
-          	
+
             $scope[$prefix.$var] = (int)$ref;
           } else {
             if (strpos(@$_SERVER['HTTP_USER_AGENT'], 'MSIE 7.0') !== false && preg_match('/[0-9]+[0-9a-f]{8}$/', $ref) == 1) {
@@ -416,8 +416,8 @@ function _param_handle($source, $def, $prefix=null, &$scope=null, $default=array
             _param_error("PARAM: failed url_md5 check for $var.", $var, $flags, $ref, $errors);
           }
         }
-        
-        if (get_magic_quotes_gpc())
+
+        if (@get_magic_quotes_gpc())
             $ref = stripslashes($ref);
 
         if ($flags & $PARAM_STRIPTAGS) {

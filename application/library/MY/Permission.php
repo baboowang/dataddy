@@ -225,7 +225,7 @@ class Permission
 
         $ok = TRUE;
         for ($i = 0, $n = strlen($check); $i < $n; $i++) {
-            $ok = $ok && strpos($mode, $check{$i}) !== FALSE;
+            $ok = $ok && strpos($mode, $check[ $i ]) !== FALSE;
 
             if (!$ok) {
 

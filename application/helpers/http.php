@@ -304,7 +304,7 @@ function redirect_uri($path, $host = '')
 	if (! preg_match('@^https?://@i', $path)) {
 		if ($path)
 		{
-			$pathchar = ($path{0} != '/') ? '/' : '';
+			$pathchar = ($path[ 0 ] != '/') ? '/' : '';
 			$path = $pathchar.$path;
 		}
 		$path = get_current_protocol()."://".$host.$path;

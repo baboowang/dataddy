@@ -46,7 +46,7 @@ class User extends Action{
             'port|端口' => 'required|is_natural_no_zero|greater_than[1001]|less_than[65535]',
             'name|数据库名称' => 'required|alpha_dash',
             'user|数据库用户名' => 'required|alpha_dash',
-            'password|数据库密码' => 'required|alpha_dash',
+            'password|数据库密码' => 'required',
             'admin_account|管理员账号' => 'required|alpha_dash|min_than[4]|max_than[13]',
             'admin_password|管理员密码' => 'required|safe_password|min_than[8]|max_than[13]'
         );

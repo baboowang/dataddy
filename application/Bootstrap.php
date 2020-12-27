@@ -19,7 +19,7 @@ class Bootstrap extends Yaf\Bootstrap_Abstract {
 
         R('starttime', microtime(TRUE));
 
-        $view = new MY\View_Simple(NULL);
+        $view = new MY\View_Simple(__dir__ . '/views');
 
         $dispatcher->setView($view);
 
