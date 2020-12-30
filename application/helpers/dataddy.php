@@ -85,10 +85,10 @@ function ddy_db($dsn)
             $port = @$params['port'];
             $database = @$params['dbname'];
 
-            if (!($user && $host && $port)) {
+            //if (!($user && $host && $port)) {
 
-                throw new \Exception("Dsn params error");
-            }
+                //throw new \Exception("Dsn params error");
+            //}
 
             if (preg_match('@^(\w+):@', $real_dsn, $ma)) {
                 $type = $ma[1];
@@ -178,6 +178,9 @@ function ddy_kw_filter($rows, $columns, $kw, $fullmatch = FALSE)
 
 function ddy_macro($name, $value, $quote = TRUE)
 {
+    if (!is_string($name)) {
+        $name = "$name";
+    }
     \MY\Data_Template::getInstance()->setMacro($name, $value, $quote);
     return $value;
 }
