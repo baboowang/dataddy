@@ -1438,8 +1438,11 @@ EOT;
                         if (!isset($ref_weight_map[$group_value])) {
                             $ref_weight_map[$group_value]['__total'] = 0;
                         }
-                        $ref_weight_map[$group_value]['__total'] += $value;
-                        $ref_weight_map = &$ref_weight_map[$group_value];
+                        // ignore group sum/avg rows
+                        if (is_numeric($i) || in_array($i, ['sum', 'avg'])) {
+                            $ref_weight_map[$group_value]['__total'] += $value;
+                            $ref_weight_map = &$ref_weight_map[$group_value];
+                        }
                     }
 
                     unset($ref_weight_map);
