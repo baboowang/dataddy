@@ -42,7 +42,7 @@ MetronicApp.config(['$ocLazyLoadProvider', '$logProvider', 'NotificationProvider
     $.extend(true, $.fn.DataTable.TableTools.classes, {
         "container": "btn-group tabletools-dropdown-on-portlet",
         "buttons": {
-            "normal": "btn btn-sm default",
+            "normal": "btn btn-sm default hide",
             "disabled": "btn btn-sm default disabled"
         },
         "collection": {
@@ -462,7 +462,7 @@ function get_dtoption(name, option)
 
         "tableTools": {
             "sSwfPath": "../../../assets/global/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-            "aButtons": [{
+            "aButtons": [/*{
                 "sExtends": "pdf",
                 "sButtonText": "PDF"
             }, {
@@ -473,14 +473,13 @@ function get_dtoption(name, option)
                 "sExtends": "xls",
                 "sButtonText": "Excel",
                 "fnClick" : fnClick
-            }, {
+            },*/ {
                 "sExtends": "print",
                 "sButtonText": "打印",
                 "sInfo": '按下 "CTR+P" 打印，按下 "ESC" 退出打印模式',
                 "sMessage": "BY DDY.ADEAZ.COM"
             }]
         },
-
         //hasFixedHeader : true,
 
         //fixedHeaderOptions : {
