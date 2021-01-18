@@ -41,8 +41,9 @@ MetronicApp.controller('ReportController', ['$rootScope', '$scope', '$http', '$l
             $table.find('tr.child').hide();
         }
 
+        $table.closest('.portlet').find('.portlet-title .actions').prepend('<a class="btn btn-xs green download-csv" href="javascript:;">下载CSV</a>');
         if (options.dt === false || options.merge_cell) {
-            $table.closest('.portlet').find('.portlet-title .actions').prepend('<a class="btn btn-xs green download-csv" href="javascript:;">下载CSV</a>');
+            //$table.closest('.portlet').find('.portlet-title .actions').prepend('<a class="btn btn-xs green download-csv" href="javascript:;">下载CSV</a>');
             return;
         }
 
