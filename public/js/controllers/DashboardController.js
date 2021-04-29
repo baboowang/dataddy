@@ -444,7 +444,8 @@ MetronicApp.controller('DashboardController', ['$rootScope', '$scope', '$http', 
 
                     var _key = chart_data.values[_keyIndex[1]][index];
                     var _val = '' + chart_data.values[_valIndex[1]][index];
-                    var _val = 1 * (_val.replace(/[,%]/g, '') || 0) || 0;
+                    //var _val = 1 * (_val.replace(/[,%]/g, '') || 0) || 0;
+                    _val = parseNumber(_val);
 
                     if (typeof _dataProvider[_key] == 'undefined') {
                         _dataProvider[_key] = 0;
@@ -456,7 +457,8 @@ MetronicApp.controller('DashboardController', ['$rootScope', '$scope', '$http', 
                         var c = graph_value_fields[i];
                         if (!chart_data.values[c[1]]) console.log(c);
                         var s = '' + chart_data.values[c[1]][index];
-                        var n = 1 * (s.replace(/[,%]/g, '') || 0);
+                        //var n = 1 * (s.replace(/[,%]/g, '') || 0);
+                        var n = parseNumber(s);
                         data_item[c[0]] = isNaN(n) ? s : n;
                     }
 
@@ -583,3 +585,7 @@ MetronicApp.controller('DashboardController', ['$rootScope', '$scope', '$http', 
         return options;
     };
 }]);
+
+var parseNumber = function (s) {
+  return 1 * (parseFloat($.trim(s).replace(/\s+.+$/, '').replace(/[,%]/g, '')) || 0);
+};
