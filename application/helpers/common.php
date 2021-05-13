@@ -208,8 +208,7 @@ function n($i, $name = '', $options = NULL)
 
 function looklike_float($val)
 {
-    return is_float($val) ||
-        (((float)$val > (int)$val || strlen($val) != strlen((int)$val)) && (ceil($val)) != 0);
+    return is_float($val) || (is_string($val) && preg_match('@^\d+\.\d+$@', $val));
 }
 
 /**
